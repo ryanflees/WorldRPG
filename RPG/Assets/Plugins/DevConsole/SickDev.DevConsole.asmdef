@@ -1,0 +1,14 @@
+{
+    "name": "SickDev.DevConsole",
+    "references": [
+        "UnityEngine.UI"
+    ],
+    "excludePlatforms": [
+        "WebGL"
+    ],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "CommandSystem.dll"
+    ],
+    "autoReferenced": true
+}

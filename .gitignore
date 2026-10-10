@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors
+.vs/
+.idea/
+*.code-workspace
+
+# Obsidian per-machine UI state
+**/.obsidian/workspace.json
+**/.obsidian/workspace-mobile.json
+**/.obsidian/cache/

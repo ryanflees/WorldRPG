@@ -1,0 +1,10 @@
+{
+    "name": "SickDev.DevConsole.Editor",
+    "references": [
+        "SickDev.DevConsole"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "autoReferenced": true
+}

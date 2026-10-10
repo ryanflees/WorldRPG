@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f2b3f8e7d4a839d4da41fc81a84bbd98
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 16833
+  packageName: DevConsole 2
+  packageVersion: 1.0.41.180712
+  assetPath: Assets/Plugins/DevConsole/Version.txt
+  uploadId: 255513
