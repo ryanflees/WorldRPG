@@ -7,8 +7,10 @@ namespace WorldRPG
     /// <summary>
     /// RTS-style top-down camera. The rig sits on the ground (pivot) and only yaws;
     /// the child camera looks down at a fixed pitch from a zoomable distance.
-    /// Free mode: middle-mouse drag / WASD to pan. Follow mode: tracks followTarget.
-    /// Both modes: Q/E or right-mouse drag to rotate, scroll to zoom, Tab to toggle mode.
+    /// Free mode: middle-mouse drag / WASD to pan. Follow mode: tracks followTarget
+    /// (middle mouse is unused there, so it never drops follow).
+    /// Both modes: Q/E or right-mouse drag to rotate (vertical drag tilts), scroll to zoom,
+    /// Tab to toggle mode.
     /// </summary>
     public class RTSCameraRig : MonoBehaviour
     {
@@ -22,6 +24,8 @@ namespace WorldRPG
 
         [Header("View")]
         [Range(10f, 89f)] public float pitch = 50f;
+        [Range(5f, 89f)] public float minPitch = 15f;
+        [Range(5f, 89f)] public float maxPitch = 80f;
         public float distance = 45f;
         public float minDistance = 8f;
         public float maxDistance = 120f;
@@ -55,7 +59,7 @@ namespace WorldRPG
         bool _dragging;
         Vector3 _dragAnchor;
         bool _mouseRotating;
-        float[] _mouseDeltaHistory;
+        Vector2[] _mouseDeltaHistory;
         int _mouseDeltaIndex;
         Vector2 _rotateCursorPos;
 
@@ -104,17 +108,19 @@ namespace WorldRPG
             _keyYawVelocity = Mathf.MoveTowards(_keyYawVelocity, keyInput * keyRotateSpeed, accel * dt);
             _yaw += _keyYawVelocity * dt;
 
-            float mouseDeltaX = 0f;
+            Vector2 mouseDelta = Vector2.zero;
             if (mouse != null)
             {
                 bool rotating = mouse.rightButton.isPressed;
                 if (rotating && !_mouseRotating) BeginMouseRotate(mouse);
                 else if (!rotating && _mouseRotating) EndMouseRotate();
                 // Skip the press frame: locking the cursor can produce a one-off delta spike.
-                else if (rotating) mouseDeltaX = mouse.delta.ReadValue().x;
+                else if (rotating) mouseDelta = mouse.delta.ReadValue();
             }
             // Always sample (zeros when idle) so the buffer drains after release and no input is lost.
-            _yaw += SmoothMouseDelta(mouseDeltaX) * mouseRotateSpeed;
+            Vector2 smoothed = SmoothMouseDelta(mouseDelta) * mouseRotateSpeed;
+            _yaw += smoothed.x;
+            pitch = Mathf.Clamp(pitch - smoothed.y, minPitch, maxPitch);
 
             // Zoom
             if (mouse != null)
@@ -127,10 +133,10 @@ namespace WorldRPG
                 }
             }
 
-            // Middle-mouse grab-pan (works in both modes; grabbing breaks follow)
+            // Middle-mouse grab-pan (free mode only)
             if (mouse != null)
             {
-                if (!mouse.middleButton.isPressed)
+                if (!mouse.middleButton.isPressed || CurrentMode != Mode.Free)
                 {
                     _dragging = false;
                 }
@@ -179,19 +185,19 @@ namespace WorldRPG
 
         // Moving average of the last N mouse deltas. Each sample contributes 1/N over N frames,
         // so the total rotation is preserved while per-frame jitter is smoothed out.
-        float SmoothMouseDelta(float delta)
+        Vector2 SmoothMouseDelta(Vector2 delta)
         {
             int frames = Mathf.Max(1, mouseSmoothFrames);
             if (_mouseDeltaHistory == null || _mouseDeltaHistory.Length != frames)
             {
-                _mouseDeltaHistory = new float[frames];
+                _mouseDeltaHistory = new Vector2[frames];
                 _mouseDeltaIndex = 0;
             }
 
             _mouseDeltaHistory[_mouseDeltaIndex] = delta;
             _mouseDeltaIndex = (_mouseDeltaIndex + 1) % frames;
 
-            float sum = 0f;
+            Vector2 sum = Vector2.zero;
             for (int i = 0; i < frames; i++) sum += _mouseDeltaHistory[i];
             return sum / frames;
         }

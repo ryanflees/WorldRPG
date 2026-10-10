@@ -283,7 +283,7 @@ MonoBehaviour:
   rig: {fileID: 1318855991}
   walkSpeed: 1.6
   runSpeed: 3.4
-  acceleration: 12
+  acceleration: 25
   deceleration: 16
   turnSmooth: 12
   gravity: -20
@@ -3821,6 +3821,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.DemoHUD
   rig: {fileID: 1318855991}
+  flyCamera: {fileID: 822615923}
 --- !u!4 &97073895
 Transform:
   m_ObjectHideFlags: 0
@@ -39466,6 +39467,59 @@ Transform:
   - {fileID: 307872197}
   m_Father: {fileID: 1481752719}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &822615922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 822615924}
+  - component: {fileID: 822615923}
+  m_Layer: 0
+  m_Name: DebugFlyCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &822615923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822615922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dac02f0b77630b47b9033232dfb12a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.DebugFlyCamera
+  rig: {fileID: 1318855991}
+  toggleKey: 94
+  moveSpeed: 10
+  fastMultiplier: 4
+  minSpeed: 1
+  maxSpeed: 100
+  scrollSpeedFactor: 1.2
+  moveSmooth: 10
+  lookSensitivity: 0.15
+--- !u!4 &822615924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822615922}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &824631227
 GameObject:
   m_ObjectHideFlags: 0
@@ -60864,6 +60918,8 @@ MonoBehaviour:
   followTarget: {fileID: 1149959}
   startMode: 1
   pitch: 50
+  minPitch: 15
+  maxPitch: 80
   distance: 18
   minDistance: 8
   maxDistance: 120
@@ -97617,3 +97673,4 @@ SceneRoots:
   - {fileID: 1318855992}
   - {fileID: 97073895}
   - {fileID: 60998867}
+  - {fileID: 822615924}

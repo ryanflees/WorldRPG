@@ -24,7 +24,7 @@ namespace WorldRPG
         float _verticalVelocity;
 
         public bool IsControlled =>
-            rig != null && rig.CurrentMode == RTSCameraRig.Mode.Follow && rig.followTarget == transform;
+            rig != null && rig.isActiveAndEnabled && rig.CurrentMode == RTSCameraRig.Mode.Follow && rig.followTarget == transform;
 
         /// <summary>Planar velocity the character is trying to move at (before collisions).</summary>
         public Vector3 DesiredVelocity => _horizontalVelocity;

@@ -6,6 +6,7 @@ namespace WorldRPG
     public class DemoHUD : MonoBehaviour
     {
         public RTSCameraRig rig;
+        public DebugFlyCamera flyCamera;
 
         GUIStyle _style;
 
@@ -20,19 +21,27 @@ namespace WorldRPG
                 richText = true
             };
 
-            string text = rig.CurrentMode == RTSCameraRig.Mode.Free
-                ? "<b>Free camera</b>\n" +
-                  "Middle mouse drag / WASD: pan  (Shift = faster)\n" +
-                  "Q / E or Right mouse drag: rotate\n" +
-                  "Scroll: zoom\n" +
-                  "Tab: control character"
-                : "<b>Character control</b>\n" +
-                  "WASD: walk  (Shift = run)\n" +
-                  "Q / E or Right mouse drag: rotate\n" +
-                  "Scroll: zoom\n" +
-                  "Tab / Middle mouse drag: free camera";
+            string text;
+            if (flyCamera != null && flyCamera.IsActive)
+                text = "<b>Debug fly camera</b>\n" +
+                       "WASD: move   Q / E: down / up  (Shift = fast)\n" +
+                       "Right mouse drag: look\n" +
+                       "Scroll: fly speed (" + flyCamera.moveSpeed.ToString("0.#") + ")\n" +
+                       "F1: back to game camera";
+            else if (rig.CurrentMode == RTSCameraRig.Mode.Free)
+                text = "<b>Free camera</b>\n" +
+                       "Middle mouse drag / WASD: pan  (Shift = faster)\n" +
+                       "Q / E or Right mouse drag: rotate\n" +
+                       "Scroll: zoom\n" +
+                       "Tab: control character   F1: debug fly camera";
+            else
+                text = "<b>Character control</b>\n" +
+                       "WASD: walk  (Shift = run)\n" +
+                       "Q / E or Right mouse drag: orbit\n" +
+                       "Scroll: zoom\n" +
+                       "Tab: free camera   F1: debug fly camera";
 
-            GUI.Box(new Rect(12, 12, 340, 104), text, _style);
+            GUI.Box(new Rect(12, 12, 440, 104), text, _style);
         }
     }
 }
