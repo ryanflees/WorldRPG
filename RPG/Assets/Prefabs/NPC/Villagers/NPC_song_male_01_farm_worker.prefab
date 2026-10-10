@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3092651347331500490}
   - component: {fileID: 4727593172612418862}
   - component: {fileID: 2363205078258797109}
+  - component: {fileID: 3004050395231146053}
   m_Layer: 0
   m_Name: NPC_song_male_01_farm_worker
   m_TagString: Untagged
@@ -72,6 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPC
   displayName: Farm Worker
   role: 1
+  gender: 0
   state: 0
 --- !u!114 &2363205078258797109
 MonoBehaviour:
@@ -95,6 +97,22 @@ MonoBehaviour:
     sprintThreshold: 1.3
   dampTime: 0.15
   speedVariation: {x: 0.9, y: 1.1}
+--- !u!114 &3004050395231146053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938141669923431375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 176c720406c7d9f4494928cf858e25fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPCIdleAnimator
+  standingSpeed: 0.05
+  crossFadeDuration: 0.5
+  layerFadeDuration: 0.25
+  mixGenders: 0
 --- !u!1001 &4308061094524868087
 PrefabInstance:
   m_ObjectHideFlags: 0

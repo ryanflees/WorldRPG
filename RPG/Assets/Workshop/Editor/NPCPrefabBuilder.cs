@@ -76,6 +76,7 @@ namespace WorldRPG.EditorTools
                 var npc = root.AddComponent<NPC>();
                 npc.role = RoleFor(folderName, out string roleSuffix);
                 npc.displayName = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(roleSuffix.Replace('_', ' '));
+                npc.gender = GenderFor(folderName);
 
                 var modelInstance = (GameObject)PrefabUtility.InstantiatePrefab(model, root.transform);
                 modelInstance.name = "Model";
@@ -87,6 +88,7 @@ namespace WorldRPG.EditorTools
 
                 var locomotion = root.AddComponent<NPCLocomotionAnimator>();
                 locomotion.animator = animator;
+                root.AddComponent<NPCIdleAnimator>();
 
                 return PrefabUtility.SaveAsPrefabAsset(root, $"{PrefabFolder}/{root.name}.prefab");
             }
@@ -108,6 +110,12 @@ namespace WorldRPG.EditorTools
             }
             roleSuffix = "villager";
             return NPCRole.Villager;
+        }
+
+        // Folders look like "song_female_02_weaver" / "song_male_02_carpenter".
+        static NPCGender GenderFor(string folderName)
+        {
+            return folderName.StartsWith(VillagerFolderPrefix + "female") ? NPCGender.Female : NPCGender.Male;
         }
 
         /// <summary>Villager prefabs already on disk (empty if they haven't been built yet).</summary>

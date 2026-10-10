@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7259629671655671383}
   - component: {fileID: 8786121667974077385}
   - component: {fileID: 3692984973743978693}
+  - component: {fileID: 7119264233701520026}
   m_Layer: 0
   m_Name: NPC_song_female_02_weaver
   m_TagString: Untagged
@@ -72,6 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPC
   displayName: Weaver
   role: 7
+  gender: 1
   state: 0
 --- !u!114 &3692984973743978693
 MonoBehaviour:
@@ -95,6 +97,22 @@ MonoBehaviour:
     sprintThreshold: 1.3
   dampTime: 0.15
   speedVariation: {x: 0.9, y: 1.1}
+--- !u!114 &7119264233701520026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996554317897942165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 176c720406c7d9f4494928cf858e25fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPCIdleAnimator
+  standingSpeed: 0.05
+  crossFadeDuration: 0.5
+  layerFadeDuration: 0.25
+  mixGenders: 0
 --- !u!1001 &7858680130411025107
 PrefabInstance:
   m_ObjectHideFlags: 0

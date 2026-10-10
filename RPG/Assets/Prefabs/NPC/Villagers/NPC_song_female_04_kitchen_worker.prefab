@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1786939619628297405}
   - component: {fileID: 2595601061763083152}
   - component: {fileID: 1897228451222124810}
+  - component: {fileID: 7042684950234410837}
   m_Layer: 0
   m_Name: NPC_song_female_04_kitchen_worker
   m_TagString: Untagged
@@ -72,6 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPC
   displayName: Kitchen Worker
   role: 8
+  gender: 1
   state: 0
 --- !u!114 &1897228451222124810
 MonoBehaviour:
@@ -95,6 +97,22 @@ MonoBehaviour:
     sprintThreshold: 1.3
   dampTime: 0.15
   speedVariation: {x: 0.9, y: 1.1}
+--- !u!114 &7042684950234410837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7893825517210100981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 176c720406c7d9f4494928cf858e25fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPCIdleAnimator
+  standingSpeed: 0.05
+  crossFadeDuration: 0.5
+  layerFadeDuration: 0.25
+  mixGenders: 0
 --- !u!1001 &2353099969037282977
 PrefabInstance:
   m_ObjectHideFlags: 0

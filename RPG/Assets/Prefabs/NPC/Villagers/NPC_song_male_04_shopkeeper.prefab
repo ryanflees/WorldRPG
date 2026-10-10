@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6782596100906253915}
   - component: {fileID: 571042840144410842}
   - component: {fileID: 6689400156996677223}
+  - component: {fileID: 6357548502070364239}
   m_Layer: 0
   m_Name: NPC_song_male_04_shopkeeper
   m_TagString: Untagged
@@ -72,6 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPC
   displayName: Shopkeeper
   role: 4
+  gender: 0
   state: 0
 --- !u!114 &6689400156996677223
 MonoBehaviour:
@@ -95,6 +97,22 @@ MonoBehaviour:
     sprintThreshold: 1.3
   dampTime: 0.15
   speedVariation: {x: 0.9, y: 1.1}
+--- !u!114 &6357548502070364239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5468256265279693466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 176c720406c7d9f4494928cf858e25fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPCIdleAnimator
+  standingSpeed: 0.05
+  crossFadeDuration: 0.5
+  layerFadeDuration: 0.25
+  mixGenders: 0
 --- !u!1001 &4757683207424515889
 PrefabInstance:
   m_ObjectHideFlags: 0

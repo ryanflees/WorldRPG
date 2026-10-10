@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 0e8063d91bca0be45bd7f25f23a426be
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24300
   internalIDToNameTable:
   - first:
       74: -1937777239319213595
@@ -156,6 +156,7 @@ ModelImporter:
     materialName: 0
     materialSearch: 1
     materialLocation: 1
+    searchTexturesGlobally: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -163,8 +164,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Standing_Chat_01_A_FemaleA' has import animation
       warnings that might lower retargeting quality:\n\t'Robot:Bip01 Spine3' is inbetween
@@ -307,7 +306,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_01_A_FemaleA
       takeName: Standing_Chat_01_A_FemaleA
-      internalID: 0
+      internalID: -1937777239319213595
       firstFrame: 0
       lastFrame: 350
       wrapMode: 0
@@ -318,13 +317,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -336,7 +335,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_01_A_MaleA
       takeName: Standing_Chat_01_A_MaleA
-      internalID: 0
+      internalID: -4142673244503384800
       firstFrame: 0
       lastFrame: 350
       wrapMode: 0
@@ -347,13 +346,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -365,7 +364,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_01_A_MaleB
       takeName: Standing_Chat_01_A_MaleB
-      internalID: 0
+      internalID: 5545995652200303986
       firstFrame: 0
       lastFrame: 350
       wrapMode: 0
@@ -376,13 +375,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -394,7 +393,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_01_B_FemaleB
       takeName: Standing_Chat_01_B_FemaleB
-      internalID: 0
+      internalID: 4810482165968573990
       firstFrame: 0
       lastFrame: 250
       wrapMode: 0
@@ -405,13 +404,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -423,7 +422,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_01_B_FemaleC
       takeName: Standing_Chat_01_B_FemaleC
-      internalID: 0
+      internalID: -1444481128862596394
       firstFrame: 0
       lastFrame: 250
       wrapMode: 0
@@ -434,13 +433,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -452,7 +451,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_01_B_MaleC
       takeName: Standing_Chat_01_B_MaleC
-      internalID: 0
+      internalID: 7552640125027462678
       firstFrame: 0
       lastFrame: 250
       wrapMode: 0
@@ -463,13 +462,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -481,7 +480,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_02_A_FemaleA
       takeName: Standing_Chat_02_A_FemaleA
-      internalID: 0
+      internalID: 6471044629233287878
       firstFrame: 0
       lastFrame: 308
       wrapMode: 0
@@ -492,13 +491,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -510,7 +509,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_02_A_MaleA
       takeName: Standing_Chat_02_A_MaleA
-      internalID: 0
+      internalID: -6208530503279663075
       firstFrame: 0
       lastFrame: 308
       wrapMode: 0
@@ -521,13 +520,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -539,7 +538,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_02_B_FemaleB
       takeName: Standing_Chat_02_B_FemaleB
-      internalID: 0
+      internalID: -648633038380387063
       firstFrame: 0
       lastFrame: 309
       wrapMode: 0
@@ -550,13 +549,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -568,7 +567,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_02_B_FemaleC
       takeName: Standing_Chat_02_B_FemaleC
-      internalID: 0
+      internalID: -7324106952502745444
       firstFrame: 0
       lastFrame: 309
       wrapMode: 0
@@ -579,13 +578,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -597,7 +596,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_02_C_MaleB
       takeName: Standing_Chat_02_C_MaleB
-      internalID: 0
+      internalID: 628441548049513982
       firstFrame: 0
       lastFrame: 356
       wrapMode: 0
@@ -608,13 +607,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -626,7 +625,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Chat_02_C_MaleC
       takeName: Standing_Chat_02_C_MaleC
-      internalID: 0
+      internalID: 3523126846941618315
       firstFrame: 0
       lastFrame: 356
       wrapMode: 0
@@ -637,13 +636,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -655,24 +654,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_01_FemaleA
       takeName: Standing_Idle_01_FemaleA
-      internalID: 0
+      internalID: 7020964357362804253
       firstFrame: 0
       lastFrame: 341
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: -0.0158
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -684,24 +683,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_01_FemaleB
       takeName: Standing_Idle_01_FemaleB
-      internalID: 0
+      internalID: 7022935905480813947
       firstFrame: 0
       lastFrame: 341
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 0.0042
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -713,24 +712,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_01_FemaleC
       takeName: Standing_Idle_01_FemaleC
-      internalID: 0
+      internalID: 2283169856832975167
       firstFrame: 0
       lastFrame: 341
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: -0.0032
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -742,24 +741,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_01_MaleA
       takeName: Standing_Idle_01_MaleA
-      internalID: 0
+      internalID: -9002373222528385968
       firstFrame: 0
       lastFrame: 341
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: -0.0042
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -771,24 +770,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_01_MaleB
       takeName: Standing_Idle_01_MaleB
-      internalID: 0
+      internalID: -444752937773980545
       firstFrame: 0
       lastFrame: 341
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 0.0042
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -800,24 +799,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_01_MaleC
       takeName: Standing_Idle_01_MaleC
-      internalID: 0
+      internalID: 378091786694233656
       firstFrame: 0
       lastFrame: 341
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: -0.0147
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -829,24 +828,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_02_FemaleA
       takeName: Standing_Idle_02_FemaleA
-      internalID: 0
+      internalID: -6315616527501448233
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: -0.0063
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -858,24 +857,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_02_FemaleB
       takeName: Standing_Idle_02_FemaleB
-      internalID: 0
+      internalID: 8252127719439485572
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: -0.0095
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -887,24 +886,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_02_FemaleC
       takeName: Standing_Idle_02_FemaleC
-      internalID: 0
+      internalID: -2147707521974211012
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 0.0021
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -916,24 +915,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_02_MaleA
       takeName: Standing_Idle_02_MaleA
-      internalID: 0
+      internalID: 6357308759243340901
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 0.0011
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -945,24 +944,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_02_MaleB
       takeName: Standing_Idle_02_MaleB
-      internalID: 0
+      internalID: -88248488706450144
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 0.0021
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -974,24 +973,24 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Idle_02_MaleC
       takeName: Standing_Idle_02_MaleC
-      internalID: 0
+      internalID: 7765254184541146650
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 0.0011
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1003,7 +1002,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Phone_01_FemaleA
       takeName: Standing_Phone_01_FemaleA
-      internalID: 0
+      internalID: 1567610546296146849
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
@@ -1014,13 +1013,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1032,7 +1031,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Phone_01_FemaleB
       takeName: Standing_Phone_01_FemaleB
-      internalID: 0
+      internalID: 1075243675278950440
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
@@ -1043,13 +1042,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1061,7 +1060,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Phone_01_FemaleC
       takeName: Standing_Phone_01_FemaleC
-      internalID: 0
+      internalID: -8364386683392632640
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
@@ -1072,13 +1071,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1090,7 +1089,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Phone_01_MaleA
       takeName: Standing_Phone_01_MaleA
-      internalID: 0
+      internalID: 99532275369502213
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
@@ -1101,13 +1100,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1119,7 +1118,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Phone_01_MaleB
       takeName: Standing_Phone_01_MaleB
-      internalID: 0
+      internalID: 8468436765829844203
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
@@ -1130,13 +1129,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1148,7 +1147,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Standing_Phone_01_MaleC
       takeName: Standing_Phone_01_MaleC
-      internalID: 0
+      internalID: 8840640636093491228
       firstFrame: 0
       lastFrame: 330
       wrapMode: 0
@@ -1159,13 +1158,13 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
@@ -1177,7 +1176,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Chat_01_A_FemaleA
       takeName: Walking_Chat_01_A_FemaleA
-      internalID: 0
+      internalID: 3965784853244672763
       firstFrame: 0
       lastFrame: 202
       wrapMode: 0
@@ -1206,7 +1205,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Chat_01_A_MaleA
       takeName: Walking_Chat_01_A_MaleA
-      internalID: 0
+      internalID: 3922613559302020163
       firstFrame: 0
       lastFrame: 202
       wrapMode: 0
@@ -1235,7 +1234,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Chat_01_B_FemaleB
       takeName: Walking_Chat_01_B_FemaleB
-      internalID: 0
+      internalID: -933014280415544490
       firstFrame: 0
       lastFrame: 338
       wrapMode: 0
@@ -1264,7 +1263,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Chat_01_B_FemaleC
       takeName: Walking_Chat_01_B_FemaleC
-      internalID: 0
+      internalID: 1095504520149167984
       firstFrame: 0
       lastFrame: 338
       wrapMode: 0
@@ -1293,7 +1292,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Chat_01_C_MaleB
       takeName: Walking_Chat_01_C_MaleB
-      internalID: 0
+      internalID: 6073844939311567872
       firstFrame: 0
       lastFrame: 282
       wrapMode: 0
@@ -1322,7 +1321,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Chat_01_C_MaleC
       takeName: Walking_Chat_01_C_MaleC
-      internalID: 0
+      internalID: -5650559392059550200
       firstFrame: 0
       lastFrame: 282
       wrapMode: 0
@@ -1351,7 +1350,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_01_FemaleA
       takeName: Walking_Phone_01_FemaleA
-      internalID: 0
+      internalID: -4447384843885741938
       firstFrame: 0
       lastFrame: 358
       wrapMode: 0
@@ -1380,7 +1379,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_01_FemaleB
       takeName: Walking_Phone_01_FemaleB
-      internalID: 0
+      internalID: -4675790482596964496
       firstFrame: 0
       lastFrame: 378
       wrapMode: 0
@@ -1409,7 +1408,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_01_FemaleC
       takeName: Walking_Phone_01_FemaleC
-      internalID: 0
+      internalID: 8723648812660338389
       firstFrame: 0
       lastFrame: 340
       wrapMode: 0
@@ -1438,7 +1437,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_01_FemaleD
       takeName: Walking_Phone_01_FemaleD
-      internalID: 0
+      internalID: 8434062882939545229
       firstFrame: 0
       lastFrame: 378
       wrapMode: 0
@@ -1467,7 +1466,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_01_MaleA
       takeName: Walking_Phone_01_MaleA
-      internalID: 0
+      internalID: 5959154549348895382
       firstFrame: 0
       lastFrame: 331
       wrapMode: 0
@@ -1496,7 +1495,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_01_MaleB
       takeName: Walking_Phone_01_MaleB
-      internalID: 0
+      internalID: -7978264699250652515
       firstFrame: 0
       lastFrame: 358
       wrapMode: 0
@@ -1525,7 +1524,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_01_MaleC
       takeName: Walking_Phone_01_MaleC
-      internalID: 0
+      internalID: 1185597460225241902
       firstFrame: 0
       lastFrame: 362
       wrapMode: 0
@@ -1554,7 +1553,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_02_FemaleA
       takeName: Walking_Phone_02_FemaleA
-      internalID: 0
+      internalID: 5629192381346349140
       firstFrame: 0
       lastFrame: 473
       wrapMode: 0
@@ -1583,7 +1582,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_02_FemaleB
       takeName: Walking_Phone_02_FemaleB
-      internalID: 0
+      internalID: 1040924513622553378
       firstFrame: 0
       lastFrame: 329
       wrapMode: 0
@@ -1612,7 +1611,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_02_FemaleC
       takeName: Walking_Phone_02_FemaleC
-      internalID: 0
+      internalID: -9216157635369163803
       firstFrame: 0
       lastFrame: 367
       wrapMode: 0
@@ -1641,7 +1640,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_02_MaleA
       takeName: Walking_Phone_02_MaleA
-      internalID: 0
+      internalID: 2929792207993593330
       firstFrame: 0
       lastFrame: 473
       wrapMode: 0
@@ -1670,7 +1669,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_02_MaleB
       takeName: Walking_Phone_02_MaleB
-      internalID: 0
+      internalID: -6766324003926821178
       firstFrame: 0
       lastFrame: 473
       wrapMode: 0
@@ -1699,7 +1698,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Walking_Phone_02_MaleC
       takeName: Walking_Phone_02_MaleC
-      internalID: 0
+      internalID: 7865231715715515664
       firstFrame: 0
       lastFrame: 405
       wrapMode: 0
@@ -1780,6 +1779,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8

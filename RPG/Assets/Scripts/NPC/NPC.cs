@@ -16,6 +16,12 @@ namespace WorldRPG
         TeaVendor,
     }
 
+    public enum NPCGender
+    {
+        Male,
+        Female,
+    }
+
     public enum NPCState
     {
         Idle,
@@ -33,6 +39,7 @@ namespace WorldRPG
         [Header("Identity")]
         public string displayName = "Villager";
         public NPCRole role = NPCRole.Villager;
+        public NPCGender gender = NPCGender.Male;
 
         [Header("State")]
         [SerializeField] NPCState state = NPCState.Idle;
