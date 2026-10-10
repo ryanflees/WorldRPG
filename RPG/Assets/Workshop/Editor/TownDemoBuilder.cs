@@ -405,6 +405,7 @@ namespace WorldRPG.EditorTools
         static void BuildTownsfolk(Transform town)
         {
             var folk = Group("Townsfolk", town);
+            var villagers = NPCPrefabBuilder.LoadVillagerPrefabs();
             int placed = 0;
             while (placed < 70)
             {
@@ -422,8 +423,17 @@ namespace WorldRPG.EditorTools
                 }
                 if (pos.sqrMagnitude < 36f) continue; // keep the spawn point clear
 
+                Quaternion yaw = Quaternion.Euler(0f, Range(0f, 360f), 0f);
+                if (villagers.Count > 0)
+                {
+                    NPCPrefabBuilder.SpawnVillager(villagers, _rng, folk, pos, yaw);
+                    placed++;
+                    continue;
+                }
+
+                // Placeholder capsule until villager prefabs are built (WorldRPG/NPC/Build Villager Prefabs).
                 var root = Group("Villager", folk, pos);
-                root.localRotation = Quaternion.Euler(0f, Range(0f, 360f), 0f);
+                root.localRotation = yaw;
                 float scale = Range(0.85f, 1.05f);
                 Prim(PrimitiveType.Capsule, "Body", root, new Vector3(0f, 0.85f * scale, 0f),
                     new Vector3(0.5f, 0.85f, 0.5f) * scale, Pick(_cloth));

@@ -24,8 +24,6 @@ namespace WorldRPG
 
         [Header("View")]
         [Range(10f, 89f)] public float pitch = 50f;
-        [Range(5f, 89f)] public float minPitch = 15f;
-        [Range(5f, 89f)] public float maxPitch = 80f;
         public float distance = 45f;
         public float minDistance = 8f;
         public float maxDistance = 120f;
@@ -118,9 +116,9 @@ namespace WorldRPG
                 else if (rotating) mouseDelta = mouse.delta.ReadValue();
             }
             // Always sample (zeros when idle) so the buffer drains after release and no input is lost.
+            // Only horizontal drag is used: the camera yaws, pitch stays fixed.
             Vector2 smoothed = SmoothMouseDelta(mouseDelta) * mouseRotateSpeed;
             _yaw += smoothed.x;
-            pitch = Mathf.Clamp(pitch - smoothed.y, minPitch, maxPitch);
 
             // Zoom
             if (mouse != null)
