@@ -15,3 +15,8 @@ Desktop.ini
 **/.obsidian/workspace.json
 **/.obsidian/workspace-mobile.json
 **/.obsidian/cache/
+
+# Mesh rebake pipeline: local Python env and intermediates (References/MeshyModels/REBAKE.md)
+/References/MeshyModels/.venv-rebake/
+/References/MeshyModels/_rebake/
+/References/MeshyModels/logs/

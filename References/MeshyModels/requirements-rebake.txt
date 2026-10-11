@@ -1,0 +1,5 @@
+# Python packages for rebake_building.sh (see REBAKE.md). meshoptimizer ships as a source
+# package and compiles on install (needs the MSVC Build Tools on Windows).
+numpy==2.5.4
+meshoptimizer==0.2.30a0
+xatlas==0.0.11
