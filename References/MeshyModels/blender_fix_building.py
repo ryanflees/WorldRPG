@@ -1,14 +1,16 @@
 """Clean a Meshy building and export an FBX for Unity.
 usage: blender -b --factory-startup -P fix.py -- <src> <out.fbx> <target_height_m> <dry|apply> [decimate_tris] [preview.png]
 """
-import bpy, bmesh, sys, json, math
+import bpy, bmesh, sys, json, math, os
 from mathutils import Vector
 
 a = sys.argv[sys.argv.index("--") + 1:]
 src, out, height, mode = a[0], a[1], float(a[2]), a[3]
 dec_tris = int(a[4]) if len(a) > 4 else 0
 preview = a[5] if len(a) > 5 else ""
-name = out.replace("\\", "/").split("/")[-1].rsplit(".", 1)[0]
+# Object/mesh name: the output file's name, unless MESH_NAME overrides it (LODs: Unity's importer treats a mesh
+# named *_LOD<n> as part of its own LOD-group naming convention and warns when LOD0 isn't in the same file).
+name = os.environ.get("MESH_NAME") or out.replace("\\", "/").split("/")[-1].rsplit(".", 1)[0]
 report = {"name": name}
 
 bpy.ops.wm.read_factory_settings(use_empty=True)

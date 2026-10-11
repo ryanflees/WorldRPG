@@ -39,9 +39,10 @@ namespace WorldRPG
                        "WASD: walk  (Shift = run)\n" +
                        "Q / E or Right mouse drag: orbit\n" +
                        "Scroll: zoom\n" +
+                       "Behind a villager: click & hold the ring to pick pocket\n" +
                        "Tab: free camera   F1: debug fly camera";
 
-            GUI.Box(new Rect(12, 12, 440, 104), text, _style);
+            GUI.Box(new Rect(12, 12, 440, 124), text, _style);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace WorldRPG
             Chatting,
             ChattingAtStall,
             TendingStall,
+            Startled,
         }
 
         static readonly List<NPCBrain> All = new List<NPCBrain>();
@@ -75,6 +76,7 @@ namespace WorldRPG
         NPCLocomotionAnimator _locomotion;
         Vector3 _facePoint;
         bool _hasFacePoint;
+        float _vendorStareUntil;
 
         public Activity CurrentActivity => activity;
 
@@ -133,6 +135,7 @@ namespace WorldRPG
                 case Activity.Chatting: UpdateChatting(); break;
                 case Activity.ChattingAtStall: UpdateChattingAtStall(); break;
                 case Activity.TendingStall: UpdateTending(); break;
+                case Activity.Startled: UpdateStartled(); break;
             }
 
             if (_hasFacePoint && _ai.isStopped) FaceTowards(_facePoint, dt);
@@ -451,6 +454,8 @@ namespace WorldRPG
 
         void UpdateTending()
         {
+            if (Time.time < _vendorStareUntil) return;   // staring at a thief they caught
+
             bool chatting = tendedStall.HasChattingCustomer;
             SetChatting(chatting);
             _npc.SetState(chatting ? NPCState.Chatting : NPCState.Idle);
@@ -458,6 +463,41 @@ namespace WorldRPG
             Component customer = tendedStall.AnyChattingCustomer;
             if (customer != null) FacePoint(customer.transform.position);
             else if (tendedStall.vendorPost != null) FacePoint(tendedStall.vendorPost.position + tendedStall.vendorPost.forward);
+        }
+
+        // ------------------------------------------------------------------ startled
+
+        /// <summary>
+        /// Caught someone (a pickpocket) in the act: drop whatever we were doing, stop, and stare at them.
+        /// Vendors keep their post and just turn to stare.
+        /// </summary>
+        public void Startle(Vector3 threat, float duration)
+        {
+            if (tendedStall != null)
+            {
+                _vendorStareUntil = Time.time + duration;
+                SetChatting(false);
+                FacePoint(threat);
+                return;
+            }
+            if (partner != null)
+            {
+                var other = partner;
+                partner = null;
+                other.PartnerLeft(this);
+            }
+            LeaveStall();
+            StopMoving();
+            activity = Activity.Startled;
+            _npc.SetState(NPCState.Idle);
+            _timer = duration;
+            SetChatting(false);
+            FacePoint(threat);
+        }
+
+        void UpdateStartled()
+        {
+            if (_timer <= 0f) EnterDeciding();
         }
 
         // ------------------------------------------------------------------ helpers

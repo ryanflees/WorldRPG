@@ -133,6 +133,8 @@ GameObject:
   - component: {fileID: 1149962}
   - component: {fileID: 1149964}
   - component: {fileID: 1149963}
+  - component: {fileID: 1149966}
+  - component: {fileID: 1149965}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -148,8 +150,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1149958}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: -37}
+  m_LocalRotation: {x: 0, y: 0.38268346, z: 0, w: 0.9238795}
+  m_LocalPosition: {x: 0, y: 0.05, z: -14.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -260,6 +262,46 @@ MonoBehaviour:
   wallAvoidFalloff: 1
   priority: 0.5
   debug: 0
+--- !u!114 &1149965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e071c9f46936a294eba4e557ffc7a08b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.Stealth.Pickpocketer
+  ringRadius: 26
+  ringHitRadius: 46
+  liftDuration: 1.4
+  liftDecay: 0.35
+  stealWindow: 7
+  shadowDistance: 0.75
+  outroTime: 0.9
+  suspicionPerSecond: 70
+  suspicionDecay: 25
+  stareTime: 5
+  wariness: 60
+--- !u!114 &1149966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc84997ab0238cd45bb265c9f5a1549e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.Stealth.BulletTime
+  slowScale: 0.12
+  easeIn: 0.15
+  easeOut: 0.35
+  saturation: -55
+  vignette: 0.38
 --- !u!1 &5758068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,6 +1322,7 @@ GameObject:
   m_Component:
   - component: {fileID: 97073895}
   - component: {fileID: 97073894}
+  - component: {fileID: 97073896}
   m_Layer: 0
   m_Name: DemoHUD
   m_TagString: Untagged
@@ -1316,6 +1359,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &97073896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97073893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24421651415684c4193b0381b2e44b50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.Stealth.PickpocketHUD
+  thief: {fileID: 1149965}
+  cam: {fileID: 1276683737}
 --- !u!1 &98669194
 GameObject:
   m_ObjectHideFlags: 0
@@ -9509,7 +9566,7 @@ Transform:
   m_GameObject: {fileID: 1051679650}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: -37}
+  m_LocalPosition: {x: 0, y: 0.05, z: -14.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11948,9 +12005,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.RTSCameraRig
   cam: {fileID: 1276683737}
   followTarget: {fileID: 1149959}
-  startMode: 0
+  startMode: 1
   pitch: 45
-  distance: 150
+  distance: 16
   minDistance: 14
   maxDistance: 220
   zoomFactor: 0.88
@@ -11965,6 +12022,7 @@ MonoBehaviour:
   boundsMax: {x: 75, y: 75}
   groundHeight: 0
   followSmooth: 8
+  blockMouseRotate: 0
 --- !u!4 &1318855992
 Transform:
   m_ObjectHideFlags: 0
@@ -11973,8 +12031,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1318855990}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -6}
+  m_LocalRotation: {x: 0, y: 0.38268346, z: 0, w: 0.9238795}
+  m_LocalPosition: {x: 0, y: 0, z: -14.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

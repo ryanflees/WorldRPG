@@ -104,7 +104,7 @@ namespace WorldRPG.EditorTools
             }
         }
 
-        /// <summary>A* RichAI agent + RVO avoidance + the wander/chat brain, on the Character layer.</summary>
+        /// <summary>A* RichAI agent + RVO avoidance + the wander/chat brain (+ pickpocket target), on the Character layer.</summary>
         static void AddNavigation(GameObject root)
         {
             int characterLayer = LayerMask.NameToLayer(NPCNavigationSetup.CharacterLayerName);
@@ -133,6 +133,7 @@ namespace WorldRPG.EditorTools
             rvo.priority = 0.5f;
 
             root.AddComponent<NPCBrain>();
+            root.AddComponent<Stealth.PickpocketTarget>();
         }
 
         static NPCRole RoleFor(string folderName, out string roleSuffix)

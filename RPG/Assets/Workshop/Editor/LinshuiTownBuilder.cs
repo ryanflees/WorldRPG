@@ -52,8 +52,9 @@ namespace WorldRPG.EditorTools
         static readonly Rect Visible = Rect.MinMaxRect(-150f, -140f, 150f, 150f);
         const float GroundTop = 0.03f;   // top of the ground collider; street decals sit 0..6 cm above y=0
 
-        static readonly Vector3 PlayerSpawn = new Vector3(0f, 0.05f, -37f);
-        static readonly Vector3 OverviewCenter = new Vector3(0f, 0f, -6f);   // camera pivot of the opening overview
+        static readonly Vector3 PlayerSpawn = new Vector3(0f, 0.05f, -14.5f);   // Main Street, at the market square's south edge
+        const float StartYaw = 45f;          // camera (and thief) yaw on play: the town seen corner-on
+        const float StartDistance = 16f;     // close street-level follow distance on play
         // Navmesh box: the town, a few metres past each gate, the bridge and a strip of the north bank.
         static readonly Vector3 NavCenter = new Vector3(0f, 4f, 0f);
         static readonly Vector3 NavSize = new Vector3(132f, 16f, 112f);
@@ -748,19 +749,22 @@ namespace WorldRPG.EditorTools
         static void SetupPlayerAndCamera()
         {
             var player = GameObject.Find("Player");
-            if (player != null) player.transform.SetPositionAndRotation(PlayerSpawn, Quaternion.identity);
+            if (player != null) player.transform.SetPositionAndRotation(PlayerSpawn, Quaternion.Euler(0f, StartYaw, 0f));
 
             var rig = Object.FindFirstObjectByType<RTSCameraRig>();
             if (rig != null)
             {
-                // Opens on an RTS overview of the whole town (free camera: WASD pan, Q/E rotate, scroll zoom);
-                // Tab hands control to the thief and the camera follows him.
-                rig.startMode = RTSCameraRig.Mode.Free;
-                rig.transform.SetPositionAndRotation(OverviewCenter, Quaternion.identity);
+                // Play starts on the thief by the market square, close and at a 45 degree yaw;
+                // Tab still switches to the free RTS camera for an overview.
+                rig.startMode = RTSCameraRig.Mode.Follow;
+                rig.distance = StartDistance;
+                rig.transform.SetPositionAndRotation(new Vector3(PlayerSpawn.x, 0f, PlayerSpawn.z), Quaternion.Euler(0f, StartYaw, 0f));
                 rig.boundsMin = new Vector2(Map.xMin + 5f, Map.yMin + 5f);
                 rig.boundsMax = new Vector2(Map.xMax - 5f, Map.yMax - 5f);
                 EditorUtility.SetDirty(rig);
             }
+
+            StealthSetup.SetupScene();
         }
 
         // ------------------------------------------------------------------ look

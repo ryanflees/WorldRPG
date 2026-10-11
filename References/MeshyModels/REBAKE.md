@@ -91,6 +91,14 @@ PY=.venv-rebake/Scripts/python SET=Song_Dynasty_10_Street_Stalls HEIGHT=2.5 TRIS
   OUT=../../RPG/Assets/Art/Stalls sh rebake_building.sh 05_Steamed_Bun_Cart
 ```
 
+The street stalls (`Song_Dynasty_10_Street_Stalls`, heights in its `building_heights.txt`) were
+done at 150k triangles into `RPG/Assets/Art/Buildings/Stalls`, which keeps them under the
+`Assets/Art/Buildings/` import rules:
+
+```bash
+ls -d Song_Dynasty_10_Street_Stalls/*/ | xargs -n1 basename | xargs -P 3 -I{}   sh -c 'PY=.venv-rebake/Scripts/python SET=Song_Dynasty_10_Street_Stalls TRIS=150000 OUT=../../RPG/Assets/Art/Buildings/Stalls sh rebake_building.sh {} > logs/{}.log 2>&1 && echo "DONE {}" || echo "FAIL {}"'
+```
+
 A whole batch, three at a time (64 GB RAM / 16 GB VRAM handles 3; each job loads the full raw
 model into Blender, so use fewer on smaller machines). Logs go to one file per model:
 
@@ -137,8 +145,38 @@ shape problems show first. Compare against the raw model when in doubt.
 3. Optional: **WorldRPG/Buildings/Build Building Showcase Scene** lays out every building in
    `Assets/Workshop/BuildingShowcase.unity`.
 
-Prefabs only get a MeshCollider at 300k triangles or fewer (`MaxColliderTris` in
-`BuildingShowcaseBuilder`), so 500k buildings currently have none.
+4. Stalls: **WorldRPG/Buildings/Build Stall Showcase Scene** builds the prefabs in
+   `Assets/Prefabs/Stalls` and lays them out in `Assets/Workshop/StallShowcase.unity`. The
+   per-building scenes (step 2) include the stalls too.
+
+## LODs and collision meshes
+
+Every building and stall also has two lower-detail rebakes made by the same pipeline (GPU bake, not
+PolyFew/decimation): `LOD=<n>` writes `<id>_LOD<n>.fbx` plus `Textures/<id>_LOD<n>_BaseColor.png` /
+`_Normal.png` next to the full model and leaves the full model untouched. Inside the FBX the mesh is
+named `<id>_L<n>`, because Unity's importer treats meshes named `*_LOD<n>` as its own LOD-group
+convention and warns when LOD0 isn't in the same file.
+
+| Set | LOD1 | LOD2 (also the collision mesh) |
+|---|---|---|
+| Buildings | `TRIS=60000 TEX=2048` | `TRIS=12000 TEX=1024` |
+| Stalls | `TRIS=25000 TEX=1024` | `TRIS=5000 TEX=512` |
+
+```bash
+PY=.venv-rebake/Scripts/python LOD=1 TRIS=60000 TEX=2048 sh rebake_building.sh 19_Xieshan_Public_Hall
+PY=.venv-rebake/Scripts/python LOD=2 TRIS=12000 TEX=1024 sh rebake_building.sh 19_Xieshan_Public_Hall
+PY=.venv-rebake/Scripts/python SET=Song_Dynasty_10_Street_Stalls OUT=../../RPG/Assets/Art/Buildings/Stalls \
+  LOD=1 TRIS=25000 TEX=1024 sh rebake_building.sh 08_Cloth_Garment_Stall
+```
+
+About 1.5 minutes each; all 60 ran in ~30 minutes three at a time. Don't edit `rebake_building.sh`
+while a batch is running: `sh` reads the script as it goes, and the running jobs fail at their last step.
+
+The prefab builder (`BuildingShowcaseBuilder.BuildPrefabs`) picks the LODs up automatically: an
+`LODGroup` with LOD0/LOD1/LOD2, each LOD aligned to LOD0 by surface centroid (at 12k triangles the
+debris pass can drop a protruding piece, which shifts the bounding box Blender centres on), and a
+`Collision` child with a MeshCollider on the LOD2 mesh. Without LOD files a prefab falls back to a
+MeshCollider on the model itself, only at 300k triangles or fewer (`MaxColliderTris`).
 
 ## Rules and pitfalls
 

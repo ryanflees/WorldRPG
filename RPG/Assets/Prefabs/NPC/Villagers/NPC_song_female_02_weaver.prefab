@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 1662574454792675056}
   - component: {fileID: 3758512088927808724}
   - component: {fileID: 6496572803033979616}
+  - component: {fileID: 7879214609019273668}
   m_Layer: 8
   m_Name: NPC_song_female_02_weaver
   m_TagString: Untagged
@@ -265,9 +266,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPCBrain
   tendedStall: {fileID: 0}
-  walkSpeed: {x: 1.2, y: 1.55}
   wanderDistance: {x: 6, y: 30}
   faceTurnSpeed: 220
+  stuckTime: 4
   standTime: {x: 4, y: 12}
   chatTime: {x: 10, y: 24}
   stallChatTime: {x: 8, y: 18}
@@ -279,6 +280,27 @@ MonoBehaviour:
   activity: 0
   partner: {fileID: 0}
   visitedStall: {fileID: 0}
+--- !u!114 &7879214609019273668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996554317897942165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 657468416ca766a46815bfa677e3cca2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.Stealth.PickpocketTarget
+  visionDistance: 6
+  visionAngle: 110
+  eyeHeight: 1.6
+  rearAngle: 150
+  rearMin: 0.35
+  rearMax: 2.2
+  followRange: 3.5
+  wealth: -1
+  refillTime: 180
 --- !u!1001 &7858680130411025107
 PrefabInstance:
   m_ObjectHideFlags: 0

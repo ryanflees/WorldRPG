@@ -48,6 +48,9 @@ namespace WorldRPG
         [Header("Follow")]
         public float followSmooth = 8f;
 
+        [Tooltip("Set by gameplay that needs the right mouse button (e.g. the pickpocket board).")]
+        public bool blockMouseRotate;
+
         public Mode CurrentMode { get; private set; } = Mode.Free;
         public event Action<Mode> ModeChanged;
 
@@ -109,7 +112,7 @@ namespace WorldRPG
             Vector2 mouseDelta = Vector2.zero;
             if (mouse != null)
             {
-                bool rotating = mouse.rightButton.isPressed;
+                bool rotating = mouse.rightButton.isPressed && !blockMouseRotate;
                 if (rotating && !_mouseRotating) BeginMouseRotate(mouse);
                 else if (!rotating && _mouseRotating) EndMouseRotate();
                 // Skip the press frame: locking the cursor can produce a one-off delta spike.

@@ -22,6 +22,8 @@ namespace WorldRPG
         CharacterController _controller;
         Vector3 _horizontalVelocity;
         float _verticalVelocity;
+        bool _autopilot;
+        Vector3 _autoVelocity, _autoFacing;
 
         public bool IsControlled =>
             rig != null && rig.isActiveAndEnabled && rig.CurrentMode == RTSCameraRig.Mode.Follow && rig.followTarget == transform;
@@ -34,13 +36,27 @@ namespace WorldRPG
             _controller = GetComponent<CharacterController>();
         }
 
+        /// <summary>Take over movement (e.g. shadowing a pickpocket mark): player input is ignored until cleared.</summary>
+        public void SetAutopilot(Vector3 velocity, Vector3 facing)
+        {
+            _autopilot = true;
+            _autoVelocity = velocity;
+            _autoFacing = facing;
+        }
+
+        public void ClearAutopilot() => _autopilot = false;
+
         void Update()
         {
             float dt = Time.deltaTime;
             Vector3 targetVelocity = Vector3.zero;
             var kb = Keyboard.current;
 
-            if (IsControlled && kb != null)
+            if (_autopilot)
+            {
+                targetVelocity = _autoVelocity;
+            }
+            else if (IsControlled && kb != null)
             {
                 Vector2 input = Vector2.zero;
                 if (kb.wKey.isPressed || kb.upArrowKey.isPressed) input.y += 1f;
@@ -59,6 +75,7 @@ namespace WorldRPG
 
             // Face the input direction, not the eased velocity, so turning feels responsive.
             Vector3 facing = targetVelocity.sqrMagnitude > 0.001f ? targetVelocity : _horizontalVelocity;
+            if (_autopilot && _autoFacing.sqrMagnitude > 0.001f) facing = _autoFacing;
             if (facing.sqrMagnitude > 0.001f)
             {
                 Quaternion look = Quaternion.LookRotation(facing, Vector3.up);

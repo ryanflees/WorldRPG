@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8885639865683517237}
   - component: {fileID: 7577621089157288244}
   - component: {fileID: 8575955163586442282}
+  - component: {fileID: 1045035935224316077}
   m_Layer: 8
   m_Name: NPC_song_female_05_tea_vendor
   m_TagString: Untagged
@@ -265,9 +266,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.NPCBrain
   tendedStall: {fileID: 0}
-  walkSpeed: {x: 1.2, y: 1.55}
   wanderDistance: {x: 6, y: 30}
   faceTurnSpeed: 220
+  stuckTime: 4
   standTime: {x: 4, y: 12}
   chatTime: {x: 10, y: 24}
   stallChatTime: {x: 8, y: 18}
@@ -279,6 +280,27 @@ MonoBehaviour:
   activity: 0
   partner: {fileID: 0}
   visitedStall: {fileID: 0}
+--- !u!114 &1045035935224316077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156245475705613486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 657468416ca766a46815bfa677e3cca2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.Stealth.PickpocketTarget
+  visionDistance: 6
+  visionAngle: 110
+  eyeHeight: 1.6
+  rearAngle: 150
+  rearMin: 0.35
+  rearMax: 2.2
+  followRange: 3.5
+  wealth: -1
+  refillTime: 180
 --- !u!1001 &3809554513155158250
 PrefabInstance:
   m_ObjectHideFlags: 0

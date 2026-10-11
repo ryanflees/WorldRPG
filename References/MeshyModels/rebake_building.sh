@@ -1,9 +1,11 @@
 #!/bin/sh
 # Reduce a raw Meshy building by rebaking: simplify shape -> Laplacian smooth -> xatlas unwrap -> bake from raw -> Unity FBX.
 # For buildings whose Meshy UVs are too shattered to decimate (PolyFew/Blender/meshopt seam-aware all fail).
-# usage: [SET=<model set dir>] [TRIS=500000] [TEX=4096] [HEIGHT=<m>] [OUT=<unity dir>] [PY=<python with numpy meshoptimizer xatlas>] [WORK=<dir>]
+# usage: [SET=<model set dir>] [TRIS=500000] [TEX=4096] [HEIGHT=<m>] [OUT=<unity dir>] [PY=<python with numpy meshoptimizer xatlas>] [WORK=<dir>] [LOD=<n>]
 #        sh rebake_building.sh <id> [...]    (full guide: REBAKE.md)
 #   e.g. sh rebake_building.sh 19_Xieshan_Public_Hall 20_Market_Guild_Hall
+# LOD=<n> writes <id>_LOD<n>.fbx and <id>_LOD<n>_BaseColor/_Normal.png next to the full-detail model instead of replacing it,
+#   e.g. LOD=1 TRIS=60000 TEX=2048 sh rebake_building.sh 19_Xieshan_Public_Hall
 # Afterwards in Unity: WorldRPG/Buildings/Build Per-Building Scenes (rebuilds prefabs/materials, picks up _BaseColor + _Normal)
 set -e
 B="/c/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe"
@@ -13,7 +15,8 @@ U="${OUT:-$HERE/../../RPG/Assets/Art/Buildings/SongDynasty}"
 TRIS="${TRIS:-500000}"
 PY="${PY:-python}"
 for n in "$@"; do
-  W="${WORK:-$HERE/_rebake}/$n"; mkdir -p "$W" "$U/$n/Textures"
+  o="$n${LOD:+_LOD$LOD}"   # output name: the model itself, or one of its LODs
+  W="${WORK:-$HERE/_rebake}/$o"; mkdir -p "$W" "$U/$n/Textures"
   # real-world height in metres: HEIGHT overrides, else the set's building_heights.txt ("<id> <m>" per line)
   h="${HEIGHT:-$(grep "^$n " "$M/building_heights.txt" 2>/dev/null | cut -d' ' -f2)}"
   [ -n "$h" ] || { echo "rebake: no height for $n (set HEIGHT=<m> or add it to $M/building_heights.txt)" >&2; exit 1; }
@@ -21,7 +24,7 @@ for n in "$@"; do
   "$PY" simplify_geo.py "$M/$n/$n.glb" "$W/geo.glb" "$TRIS"
   "$B" -b --factory-startup -P smooth_building.py -- "$W/geo.glb" "$W/smooth.glb" 2>&1 | grep "SMOOTH\|Error"
   "$PY" unwrap_building.py "$W/smooth.glb" "$W/uv.glb" "${TEX:-4096}"
-  KEEP_UV=1 "$B" -b --factory-startup -P bake_building.py -- "$M/$n/$n.glb" "$W/uv.glb" "$W/bake" "$n" "${TEX:-4096}" 2>&1 | grep "BAKE\|Error"
-  "$B" -b --factory-startup -P blender_fix_building.py -- "$W/bake/$n.glb" "$U/$n/$n.fbx" "$h" apply 0 2>&1 | grep "REPORT\|Error"
-  cp "$W/bake/${n}_BaseColor.png" "$W/bake/${n}_Normal.png" "$U/$n/Textures/"
+  KEEP_UV=1 "$B" -b --factory-startup -P bake_building.py -- "$M/$n/$n.glb" "$W/uv.glb" "$W/bake" "$o" "${TEX:-4096}" 2>&1 | grep "BAKE\|Error"
+  MESH_NAME="$n${LOD:+_L$LOD}" "$B" -b --factory-startup -P blender_fix_building.py -- "$W/bake/$o.glb" "$U/$n/$o.fbx" "$h" apply 0 2>&1 | grep "REPORT\|Error"
+  cp "$W/bake/${o}_BaseColor.png" "$W/bake/${o}_Normal.png" "$U/$n/Textures/"
 done
