@@ -16,8 +16,8 @@ Shader "WorldRPG/InkToon"
         [MainTexture] _BaseMap("Base Map", 2D) = "white" {}
         [MainColor] _BaseColor("Base Color", Color) = (1, 1, 1, 1)
         [Header(Distance)]
-        _InkFadeStart("Ink Fade Start (m)", Float) = 18
-        _InkFadeEnd("Ink Fade End (m)", Float) = 50
+        _InkFadeStart("Ink Fade Start (m)", Float) = 44
+        _InkFadeEnd("Ink Fade End (m)", Float) = 122
 
         [Toggle(_NORMALMAP)] _UseNormalMap("Use Normal Map", Float) = 1
         [Normal] _BumpMap("Normal Map", 2D) = "bump" {}

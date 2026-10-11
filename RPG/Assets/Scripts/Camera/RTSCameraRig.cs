@@ -40,7 +40,8 @@ namespace WorldRPG
         public float keyRotateDecel = 900f;     // stop a little quicker than starting
 
         [Header("Pan")]
-        public float keyPanSpeed = 30f;         // units per second at distance 45
+        [Tooltip("Units per second when the view is as wide as FOV 24 at distance 45; scales with the visible width.")]
+        public float keyPanSpeed = 30f;
         public Vector2 boundsMin = new Vector2(-80f, -80f);
         public Vector2 boundsMax = new Vector2(80f, 80f);
         public float groundHeight = 0f;
@@ -167,7 +168,7 @@ namespace WorldRPG
                 {
                     Quaternion yawRot = Quaternion.Euler(0f, _yaw, 0f);
                     Vector3 dir = yawRot * new Vector3(move.x, 0f, move.y).normalized;
-                    float speed = keyPanSpeed * (_distance / 45f) * (kb.leftShiftKey.isPressed ? 2f : 1f);
+                    float speed = keyPanSpeed * ViewWidthScale() * (kb.leftShiftKey.isPressed ? 2f : 1f);
                     _pivot += dir * speed * dt;
                 }
             }
@@ -182,6 +183,16 @@ namespace WorldRPG
                 ClampPivot();
                 Apply();
             }
+        }
+
+        /// <summary>
+        /// Visible width at the pivot relative to FOV 24 at distance 45, so panning feels the same at any FOV
+        /// (a narrow-FOV camera sits much further back for the same framing).
+        /// </summary>
+        float ViewWidthScale()
+        {
+            float fov = cam != null ? cam.fieldOfView : 24f;
+            return _distance * Mathf.Tan(fov * 0.5f * Mathf.Deg2Rad) / (45f * Mathf.Tan(12f * Mathf.Deg2Rad));
         }
 
         // Moving average of the last N mouse deltas. Each sample contributes 1/N over N frames,

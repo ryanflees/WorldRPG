@@ -60,7 +60,7 @@ namespace WorldRPG
         public Vector2 shotDuration = new Vector2(10f, 15f);
         [Tooltip("How fast the camera's ground point glides (m/s).")]
         public float glideSpeed = 1.8f;
-        public Vector2 distanceRange = new Vector2(23f, 32f);
+        public Vector2 distanceRange = new Vector2(56f, 78f);   // FOV 10 camera
         public Vector2 pitchRange = new Vector2(40f, 54f);
         [Tooltip("Shots stay inside this area (x/z, world space): the town inside its walls.")]
         public Rect area = new Rect(-50f, -40f, 100f, 75f);
@@ -71,7 +71,7 @@ namespace WorldRPG
         public bool loop = true;
         public List<Shot> shots = new List<Shot>();
 
-        static readonly Color Paper = new Color(0.95f, 0.92f, 0.85f, 1f);
+        static readonly Color Paper = new Color(0.95f, 0.93f, 0.88f, 1f);
         static readonly Color Ink = new Color(0.14f, 0.11f, 0.09f, 1f);
         static readonly Color Vermilion = new Color(0.74f, 0.19f, 0.13f, 1f);
         const float ExitFade = 0.6f, EnterFade = 1f;
@@ -301,7 +301,7 @@ namespace WorldRPG
             _take = new Shot
             {
                 name = "Fallback", duration = shotDuration.y, fromPivot = c, toPivot = c + new Vector3(4f, 0f, 4f),
-                fromYaw = yaw, toYaw = yaw + 15f, fromDistance = 60f, toDistance = 60f, fromPitch = 55f, toPitch = 55f,
+                fromYaw = yaw, toYaw = yaw + 15f, fromDistance = 146f, toDistance = 146f, fromPitch = 55f, toPitch = 55f,
             };
         }
 

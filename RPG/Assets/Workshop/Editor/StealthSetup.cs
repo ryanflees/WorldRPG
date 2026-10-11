@@ -7,7 +7,8 @@ namespace WorldRPG.EditorTools
 {
     /// <summary>
     /// Wires pickpocketing into a scene: Pickpocketer + BulletTime on the Player, the HUD next to DemoHUD,
-    /// and a PickpocketTarget on every villager prefab. Called by the level builders; also on the menu.
+    /// a PickpocketTarget on every villager prefab, and the level goal (DayClock + GuildQuest on the Player,
+    /// so the afternoon starts when the thief appears). Called by the level builders; also on the menu.
     /// </summary>
     public static class StealthSetup
     {
@@ -40,6 +41,17 @@ namespace WorldRPG.EditorTools
             hud.thief = thief;
             var rig = Object.FindFirstObjectByType<RTSCameraRig>();
             if (rig != null) hud.cam = rig.cam;
+
+            var clock = player.GetComponent<DayClock>();
+            if (clock == null) clock = player.AddComponent<DayClock>();
+            if (clock.sun == null)
+                foreach (var light in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+                    if (light.type == LightType.Directional) { clock.sun = light; break; }
+            var quest = player.GetComponent<GuildQuest>();
+            if (quest == null) quest = player.AddComponent<GuildQuest>();
+            quest.clock = clock;
+            quest.thief = thief;
+            quest.hud = hud;
 
             // Scene NPCs that aren't villager prefab instances (or are, with the component removed).
             foreach (var npc in Object.FindObjectsByType<NPC>(FindObjectsInactive.Include, FindObjectsSortMode.None))

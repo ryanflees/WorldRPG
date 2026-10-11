@@ -36,8 +36,8 @@ Material:
     - _AmbientStrength: 0.6
     - _BumpScale: 0.5
     - _CoreShadowThreshold: 0.2
-    - _InkFadeEnd: 50
-    - _InkFadeStart: 18
+    - _InkFadeEnd: 122
+    - _InkFadeStart: 44
     - _InkRimBreakup: 0.45
     - _InkRimSoftness: 0.06
     - _InkRimStrength: 0.75

@@ -54,7 +54,10 @@ namespace WorldRPG.EditorTools
 
         static readonly Vector3 PlayerSpawn = new Vector3(0f, 0.05f, -14.5f);   // Main Street, at the market square's south edge
         const float StartYaw = 45f;          // camera (and thief) yaw on play: the town seen corner-on
-        const float StartDistance = 16f;     // close street-level follow distance on play
+        // Near-orthographic look: a narrow FOV from far away. Every camera distance below was scaled by
+        // tan(24/2) / tan(CameraFov/2) (= 2.43) from the old FOV 24 values, so the framing is unchanged.
+        const float CameraFov = 10f;
+        const float StartDistance = 38.9f;   // close street-level follow distance on play (was 16 at FOV 24)
         // Navmesh box: the town, a few metres past each gate, the bridge and a strip of the north bank.
         static readonly Vector3 NavCenter = new Vector3(0f, 4f, 0f);
         static readonly Vector3 NavSize = new Vector3(132f, 16f, 112f);
@@ -315,10 +318,12 @@ namespace WorldRPG.EditorTools
                 Ground.DampOldStone => (0.8f, 1.12f),
                 Ground.MossyCobble => (0.85f, 1.06f),
                 Ground.BlueGrayBrick => (0.8f, 1.02f),
-                _ => (0.85f, 0.92f),
+                // Sandy yards and the fields outside fill most of the frame: kept pale and low in colour so the town
+                // reads fresh and clean rather than yellow.
+                _ => (0.55f, 0.97f),
             };
             mat.SetFloat("_Saturation", look.saturation);
-            mat.SetFloat("_PaperTint", 0.08f);
+            mat.SetFloat("_PaperTint", 0.03f);
             mat.SetFloat("_Brightness", look.brightness);
             EditorUtility.SetDirty(mat);
             Batch(mat, TileSize[g]);
@@ -806,16 +811,16 @@ namespace WorldRPG.EditorTools
             Vector3 square = new Vector3(0f, 0f, -2f);
             trailer.shots = new List<TownTrailer.Shot>
             {
-                // Close street-level glides, just above the gameplay camera (distance 16, pitch 45).
-                Shot("Opening on the square", 12f, new Vector3(-6f, 0f, -5f), new Vector3(4f, 0f, -1f), 30f, 15f, 24f, 21f, 52f, 48f),
-                Shot("Up Main Street", 10f, new Vector3(0f, 0f, -34f), new Vector3(0f, 0f, -16f), 0f, 6f, 24f, 22f, 44f, 42f),
-                Shot("Market orbit", 13f, square, square, 200f, 290f, 24f, 22f, 42f, 40f),
-                Shot("Stall row", 10f, new Vector3(-7f, 0f, -6f), new Vector3(7f, 0f, -2f), 20f, 0f, 20f, 19f, 46f, 44f),
-                Shot("Guild hall", 9f, new Vector3(-5f, 0f, 9f), new Vector3(5f, 0f, 11f), 0f, 0f, 26f, 24f, 36f, 34f),
-                Shot("Canal and quay", 12f, new Vector3(-30f, 0f, 38f), new Vector3(20f, 0f, 38f), 350f, 10f, 26f, 24f, 40f, 40f),
-                Shot("Magistrate's yamen", 10f, new Vector3(40f, 0f, 18f), new Vector3(44f, 0f, 18f), 80f, 100f, 28f, 24f, 40f, 40f),
-                Shot("Back alleys", 10f, new Vector3(-14f, 0f, -30f), new Vector3(-28f, 0f, -36f), 150f, 170f, 22f, 22f, 60f, 58f),
-                Shot("Rise over the square", 12f, square, square, 225f, 195f, 22f, 40f, 42f, 50f),
+                // Close street-level glides, just above the gameplay camera (distance 38.9, pitch 45).
+                Shot("Opening on the square", 12f, new Vector3(-6f, 0f, -5f), new Vector3(4f, 0f, -1f), 30f, 15f, 58.3f, 51.0f, 52f, 48f),
+                Shot("Up Main Street", 10f, new Vector3(0f, 0f, -34f), new Vector3(0f, 0f, -16f), 0f, 6f, 58.3f, 53.4f, 44f, 42f),
+                Shot("Market orbit", 13f, square, square, 200f, 290f, 58.3f, 53.4f, 42f, 40f),
+                Shot("Stall row", 10f, new Vector3(-7f, 0f, -6f), new Vector3(7f, 0f, -2f), 20f, 0f, 48.6f, 46.2f, 46f, 44f),
+                Shot("Guild hall", 9f, new Vector3(-5f, 0f, 9f), new Vector3(5f, 0f, 11f), 0f, 0f, 63.2f, 58.3f, 36f, 34f),
+                Shot("Canal and quay", 12f, new Vector3(-30f, 0f, 38f), new Vector3(20f, 0f, 38f), 350f, 10f, 63.2f, 58.3f, 40f, 40f),
+                Shot("Magistrate's yamen", 10f, new Vector3(40f, 0f, 18f), new Vector3(44f, 0f, 18f), 80f, 100f, 68.0f, 58.3f, 40f, 40f),
+                Shot("Back alleys", 10f, new Vector3(-14f, 0f, -30f), new Vector3(-28f, 0f, -36f), 150f, 170f, 53.4f, 53.4f, 60f, 58f),
+                Shot("Rise over the square", 12f, square, square, 225f, 195f, 53.4f, 97.2f, 42f, 50f),
             };
             EditorUtility.SetDirty(trailer);
         }
@@ -873,8 +878,13 @@ namespace WorldRPG.EditorTools
             {
                 ink.SetColor("_HazeColor", Haze);
                 // Starts beyond the overview's own distance, so only the countryside past the walls fades.
-                ink.SetFloat("_HazeStart", 170f);
-                ink.SetFloat("_HazeEnd", 520f);
+                ink.SetFloat("_HazeStart", 413f);
+                ink.SetFloat("_HazeEnd", 1264f);
+                // Contour fades are camera distances too: scaled with the camera so lines keep their weight.
+                ink.SetFloat("_LineFadeStart", 219f);
+                ink.SetFloat("_LineFadeEnd", 632f);
+                ink.SetFloat("_InnerFadeStart", 97f);
+                ink.SetFloat("_InnerFadeEnd", 267f);
                 EditorUtility.SetDirty(ink);
             }
 
@@ -884,15 +894,15 @@ namespace WorldRPG.EditorTools
             {
                 rig.pitch = 45f;
                 rig.distance = StartDistance;   // play starts close on the thief; scroll out to ~150 for the whole town
-                rig.minDistance = 14f;
-                rig.maxDistance = 220f;
+                rig.minDistance = 34f;
+                rig.maxDistance = 535f;
                 EditorUtility.SetDirty(rig);
                 if (rig.cam != null)
                 {
                     var cam = rig.cam;
-                    cam.fieldOfView = 24f;
-                    cam.nearClipPlane = 1f;
-                    cam.farClipPlane = 900f;
+                    cam.fieldOfView = CameraFov;
+                    cam.nearClipPlane = 3f;
+                    cam.farClipPlane = 2200f;
                     cam.clearFlags = CameraClearFlags.SolidColor;
                     cam.backgroundColor = Haze;
                     cam.transform.localRotation = Quaternion.Euler(rig.pitch, 0f, 0f);
@@ -1020,9 +1030,9 @@ namespace WorldRPG.EditorTools
 
             // Soft but not flat: a touch of contrast and saturation so robes, lacquer and roofs keep their colour.
             var color = profile.Add<UnityEngine.Rendering.Universal.ColorAdjustments>(true);
-            color.postExposure.Override(-0.05f);
-            color.contrast.Override(14f);
-            color.saturation.Override(14f);
+            color.postExposure.Override(0.05f);
+            color.contrast.Override(12f);
+            color.saturation.Override(8f);
 
             // Lift the blacks a little (shade never goes black) and keep highlights from clipping; colour-neutral,
             // so the scene isn't tinted yellow on top of its warm materials.
@@ -1041,13 +1051,14 @@ namespace WorldRPG.EditorTools
             // Depth without a colour cast: lit areas lean warm, shade leans cool (the painter's warm-light /
             // cool-shadow rule). No depth of field: a fixed focus range can't follow the RTS zoom.
             var split = profile.Add<UnityEngine.Rendering.Universal.SplitToning>(true);
-            split.shadows.Override(new Color(0.48f, 0.50f, 0.54f));
-            split.highlights.Override(new Color(0.62f, 0.56f, 0.47f));
-            split.balance.Override(10f);
+            // Kept almost neutral: highlights barely warm, shade a little cool. Warm highlights read as yellow.
+            split.shadows.Override(new Color(0.47f, 0.50f, 0.55f));
+            split.highlights.Override(new Color(0.55f, 0.54f, 0.52f));
+            split.balance.Override(0f);
 
-            // One mild warm balance for the whole frame (the earlier stack of warm filters turned everything yellow).
+            // Slightly cool overall for a fresh, clean daylight (the user found the warm grades too yellow).
             var white = profile.Add<UnityEngine.Rendering.Universal.WhiteBalance>(true);
-            white.temperature.Override(5f);
+            white.temperature.Override(-6f);
 
             var vignette = profile.Add<UnityEngine.Rendering.Universal.Vignette>(true);
             vignette.color.Override(new Color(0.2f, 0.18f, 0.16f));

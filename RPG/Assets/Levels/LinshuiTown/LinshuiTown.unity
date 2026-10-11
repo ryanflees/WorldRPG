@@ -135,6 +135,8 @@ GameObject:
   - component: {fileID: 1149963}
   - component: {fileID: 1149966}
   - component: {fileID: 1149965}
+  - component: {fileID: 1149968}
+  - component: {fileID: 1149967}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -302,6 +304,47 @@ MonoBehaviour:
   easeOut: 0.35
   saturation: -55
   vignette: 0.38
+--- !u!114 &1149967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0acbc3614abef3f4eab6211a640fe7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.Stealth.GuildQuest
+  clock: {fileID: 1149968}
+  thief: {fileID: 1149965}
+  hud: {fileID: 97073896}
+  targetWen: 4000
+  guildName: The Thieves' Guild
+  briefingTime: 7
+--- !u!114 &1149968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 157bdf7bb26f87845b536064025fe8a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.DayClock
+  sun: {fileID: 1307309444}
+  startHour: 13.5
+  endHour: 17.5
+  dayLengthSeconds: 600
+  startAngles: {x: 42, y: 50}
+  endAngles: {x: 24, y: 82}
+  startColor: {r: 1, g: 0.98, b: 0.95, a: 1}
+  endColor: {r: 1, g: 0.88, b: 0.76, a: 1}
+  startIntensity: 1.55
+  endIntensity: 1.3
+  endAmbient: 0.9
 --- !u!1 &12903062
 GameObject:
   m_ObjectHideFlags: 0
@@ -1340,6 +1383,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorldRPG.Stealth.PickpocketHUD
   thief: {fileID: 1149965}
   cam: {fileID: 1276683737}
+  showPurse: 1
 --- !u!1 &97386614
 GameObject:
   m_ObjectHideFlags: 0
@@ -13757,9 +13801,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 1
-  far clip plane: 900
-  field of view: 24
+  near clip plane: 3
+  far clip plane: 2200
+  field of view: 10
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -13815,7 +13859,7 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_TaaSettings:
     m_Quality: 3
-    m_FrameInfluence: 0.1
+    m_FrameInfluence: 0.100000024
     m_JitterScale: 1
     m_MipBias: 0
     m_VarianceClampScale: 0.9
@@ -13838,7 +13882,7 @@ Transform:
   m_GameObject: {fileID: 1276683736}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268346, y: 0, z: 0, w: 0.9238795}
-  m_LocalPosition: {x: 0, y: 106.066025, z: -106.06601}
+  m_LocalPosition: {x: 0, y: 27.506456, z: -27.506453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14282,9 +14326,9 @@ MonoBehaviour:
   followTarget: {fileID: 1149959}
   startMode: 1
   pitch: 45
-  distance: 16
-  minDistance: 14
-  maxDistance: 220
+  distance: 38.9
+  minDistance: 34
+  maxDistance: 535
   zoomFactor: 0.88
   zoomSmooth: 10
   keyRotateSpeed: 90
@@ -14343,7 +14387,7 @@ MonoBehaviour:
   easing: 0.35
   shotDuration: {x: 10, y: 15}
   glideSpeed: 1.8
-  distanceRange: {x: 23, y: 32}
+  distanceRange: {x: 56, y: 78}
   pitchRange: {x: 40, y: 54}
   area:
     serializedVersion: 2

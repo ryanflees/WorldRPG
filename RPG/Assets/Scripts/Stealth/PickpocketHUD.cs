@@ -11,9 +11,11 @@ namespace WorldRPG.Stealth
     {
         public Pickpocketer thief;
         public Camera cam;
+        [Tooltip("Off when something else shows the purse (the guild quest's timeline).")]
+        public bool showPurse = true;
 
-        static readonly Color Paper = new Color(0.94f, 0.9f, 0.81f, 0.96f);
-        static readonly Color PaperDark = new Color(0.86f, 0.8f, 0.68f, 1f);
+        static readonly Color Paper = new Color(0.95f, 0.93f, 0.88f, 0.96f);
+        static readonly Color PaperDark = new Color(0.84f, 0.81f, 0.74f, 1f);
         static readonly Color Ink = new Color(0.16f, 0.13f, 0.11f, 1f);
         static readonly Color InkSoft = new Color(0.16f, 0.13f, 0.11f, 0.55f);
         static readonly Color Vermilion = new Color(0.74f, 0.19f, 0.13f, 1f);
@@ -157,8 +159,9 @@ namespace WorldRPG.Stealth
         {
             if (thief.Suspicion <= 0.5f && thief.CurrentPhase == Pickpocketer.Phase.Free) return;
             float s = Mathf.Clamp01(thief.Suspicion / 100f);
-            var bar = new Rect(w * 0.5f - 160f, 24f, 320f, 10f);
-            Plate(new Rect(bar.x - 12f, 8f, bar.width + 24f, 54f), "", Ink, _center);
+            // Sits below the guild quest's timeline.
+            var bar = new Rect(w * 0.5f - 160f, 94f, 320f, 10f);
+            Plate(new Rect(bar.x - 12f, 78f, bar.width + 24f, 54f), "", Ink, _center);
             Fill(bar, PaperDark);
             Fill(new Rect(bar.x, bar.y, bar.width * s, bar.height), Color.Lerp(Gold, Vermilion, s));
             GUI.color = Ink;
@@ -169,7 +172,7 @@ namespace WorldRPG.Stealth
 
         void DrawPurse(float w)
         {
-            if (thief.Purse <= 0) return;
+            if (!showPurse || thief.Purse <= 0) return;
             Plate(new Rect(w - 220f, 12f, 208f, 34f), "Purse  " + thief.Purse + " wen", Ink, _center);
         }
 

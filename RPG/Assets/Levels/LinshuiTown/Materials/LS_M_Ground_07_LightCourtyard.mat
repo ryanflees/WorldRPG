@@ -35,11 +35,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _AmbientStrength: 0.55
-    - _Brightness: 0.92
+    - _Brightness: 0.97
     - _BumpScale: 0.6
     - _Cull: 2
-    - _PaperTint: 0.08
-    - _Saturation: 0.85
+    - _PaperTint: 0.03
+    - _Saturation: 0.55
     - _ShadowDesaturate: 0.15
     - _ShadowSoftness: 0.22
     - _ShadowThreshold: 0.42

@@ -38,7 +38,7 @@ Material:
     - _Brightness: 0.9
     - _BumpScale: 0.6
     - _Cull: 2
-    - _PaperTint: 0.08
+    - _PaperTint: 0.03
     - _Saturation: 0.6
     - _ShadowDesaturate: 0.15
     - _ShadowSoftness: 0.22

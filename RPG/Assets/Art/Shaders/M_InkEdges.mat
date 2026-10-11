@@ -26,13 +26,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _DepthThreshold: 0.025
-    - _HazeEnd: 520
-    - _HazeStart: 170
+    - _HazeEnd: 1264
+    - _HazeStart: 413
     - _HazeStrength: 0.35
-    - _InnerFadeEnd: 110
-    - _InnerFadeStart: 40
-    - _LineFadeEnd: 260
-    - _LineFadeStart: 90
+    - _InnerFadeEnd: 267
+    - _InnerFadeStart: 97
+    - _LineFadeEnd: 632
+    - _LineFadeStart: 219
     - _LineStrength: 0.7
     - _LineWidth: 1
     - _NormalThreshold: 0.45
