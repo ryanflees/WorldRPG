@@ -38,7 +38,7 @@ namespace WorldRPG.EditorTools
         const string GroundFolder = "Assets/Art/Textures/Ground";
         const string WorkshopMats = "Assets/Workshop/Materials";
         const int Seed = 1127;
-        const int VillagerCount = 64;
+        const int VillagerCount = 128;
 
         // ------------------------------------------------------------------ layout
 
@@ -765,6 +765,69 @@ namespace WorldRPG.EditorTools
             }
 
             StealthSetup.SetupScene();
+            SetupTrailer();
+        }
+
+        [MenuItem("WorldRPG/Levels/Setup Linshui Trailer Shots")]
+        static void SetupTrailerMenu()
+        {
+            SetupTrailer();
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+
+        /// <summary>
+        /// Opening flythrough on the camera rig (untick Trailer Mode on TownTrailer to jump straight into play). Random mode needs
+        /// only the area; the scripted shots are RTS camera moves: ground pivot, yaw (0 = looking north), distance
+        /// and pitch, gliding from -> to.
+        /// </summary>
+        static void SetupTrailer()
+        {
+            var rig = Object.FindFirstObjectByType<RTSCameraRig>();
+            if (rig == null) return;
+            var trailer = rig.GetComponent<TownTrailer>();
+            if (trailer == null)
+            {
+                // The flythrough is the game's opening (hold Space to start). An existing component keeps its settings.
+                trailer = rig.gameObject.AddComponent<TownTrailer>();
+                trailer.trailerMode = true;
+            }
+            trailer.rig = rig;
+            var player = GameObject.Find("Player");
+            trailer.hideObjects = player != null ? new[] { player } : new GameObject[0];
+            var hud = Object.FindFirstObjectByType<DemoHUD>();
+            trailer.disableComponents = hud != null ? new Behaviour[] { hud } : new Behaviour[0];
+            trailer.title = "Linshui";
+            trailer.subtitle = "A river town of the Song";
+            trailer.endTitle = "Linshui";
+            trailer.area = Interior;   // random shots stay inside the walls
+
+            // Scripted alternative (Mode = Scripted); the default Random mode improvises street shots instead.
+
+            Vector3 square = new Vector3(0f, 0f, -2f);
+            trailer.shots = new List<TownTrailer.Shot>
+            {
+                // Close street-level glides, just above the gameplay camera (distance 16, pitch 45).
+                Shot("Opening on the square", 12f, new Vector3(-6f, 0f, -5f), new Vector3(4f, 0f, -1f), 30f, 15f, 24f, 21f, 52f, 48f),
+                Shot("Up Main Street", 10f, new Vector3(0f, 0f, -34f), new Vector3(0f, 0f, -16f), 0f, 6f, 24f, 22f, 44f, 42f),
+                Shot("Market orbit", 13f, square, square, 200f, 290f, 24f, 22f, 42f, 40f),
+                Shot("Stall row", 10f, new Vector3(-7f, 0f, -6f), new Vector3(7f, 0f, -2f), 20f, 0f, 20f, 19f, 46f, 44f),
+                Shot("Guild hall", 9f, new Vector3(-5f, 0f, 9f), new Vector3(5f, 0f, 11f), 0f, 0f, 26f, 24f, 36f, 34f),
+                Shot("Canal and quay", 12f, new Vector3(-30f, 0f, 38f), new Vector3(20f, 0f, 38f), 350f, 10f, 26f, 24f, 40f, 40f),
+                Shot("Magistrate's yamen", 10f, new Vector3(40f, 0f, 18f), new Vector3(44f, 0f, 18f), 80f, 100f, 28f, 24f, 40f, 40f),
+                Shot("Back alleys", 10f, new Vector3(-14f, 0f, -30f), new Vector3(-28f, 0f, -36f), 150f, 170f, 22f, 22f, 60f, 58f),
+                Shot("Rise over the square", 12f, square, square, 225f, 195f, 22f, 40f, 42f, 50f),
+            };
+            EditorUtility.SetDirty(trailer);
+        }
+
+        static TownTrailer.Shot Shot(string name, float duration, Vector3 fromPivot, Vector3 toPivot, float fromYaw, float toYaw,
+                                     float fromDistance, float toDistance, float fromPitch, float toPitch)
+        {
+            return new TownTrailer.Shot
+            {
+                name = name, duration = duration, fromPivot = fromPivot, toPivot = toPivot, fromYaw = fromYaw, toYaw = toYaw,
+                fromDistance = fromDistance, toDistance = toDistance, fromPitch = fromPitch, toPitch = toPitch,
+            };
         }
 
         // ------------------------------------------------------------------ look
@@ -820,7 +883,7 @@ namespace WorldRPG.EditorTools
             if (rig != null)
             {
                 rig.pitch = 45f;
-                rig.distance = 150f;   // frames the whole town at FOV 24; zoom in with the wheel
+                rig.distance = StartDistance;   // play starts close on the thief; scroll out to ~150 for the whole town
                 rig.minDistance = 14f;
                 rig.maxDistance = 220f;
                 EditorUtility.SetDirty(rig);
