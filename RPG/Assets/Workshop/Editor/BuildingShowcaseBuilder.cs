@@ -30,7 +30,20 @@ namespace WorldRPG.EditorTools
         // every prefab faces +Z like the characters.
         const float ModelYaw = 0f;
 
+        // Models whose Meshy "front" isn't the side they're used from. For stalls +Z must be the
+        // customer side (goods on display) and -Z the vendor side.
+        static readonly Dictionary<string, float> ModelYawOverrides = new Dictionary<string, float>
+        {
+            { "08_Cloth_Garment_Stall", 180f },   // Meshy front is the back of the garment rack
+        };
+
         const int MaxColliderTris = 300000;
+
+        // Rebaked LODs (rebake_building.sh LOD=1/2) sit next to the model as <id>_LOD1.fbx / <id>_LOD2.fbx.
+        // LOD2 doubles as the collision mesh. Screen-relative heights where each level takes over;
+        // stalls are small, so they switch earlier than buildings.
+        static readonly float[] BuildingLodHeights = { 0.35f, 0.12f, 0.01f };
+        static readonly float[] StallLodHeights = { 0.25f, 0.08f, 0.008f };
 
         const int Columns = 5;
         const float Gap = 3f;          // between neighbours in a row, and between a street and the next row
@@ -215,19 +228,53 @@ namespace WorldRPG.EditorTools
                 var root = new GameObject(id);
                 var inst = (GameObject)PrefabUtility.InstantiatePrefab(model, root.transform);
                 inst.name = "Model";
-                inst.transform.localRotation = Quaternion.Euler(0f, ModelYaw, 0f);
-                foreach (var mr in inst.GetComponentsInChildren<MeshRenderer>())
+                float yaw = ModelYawOverrides.TryGetValue(id, out float yawFix) ? yawFix : ModelYaw;
+                inst.transform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+                foreach (var mr in inst.GetComponentsInChildren<MeshRenderer>()) mr.sharedMaterial = mat;
+
+                var lods = new List<Renderer[]> { inst.GetComponentsInChildren<Renderer>() };
+                GameObject lowest = null;
+                Vector3 lod0Centroid = SurfaceCentroid(inst);
+                for (int level = 1; level <= 2; level++)
                 {
-                    mr.sharedMaterial = mat;
-                    var mf = mr.GetComponent<MeshFilter>();
-                    // Raw Meshy meshes (millions of tris) take minutes to cook; collide only once reduced.
-                    if (mf.sharedMesh.GetIndexCount(0) / 3 > MaxColliderTris)
+                    GameObject lod = AddLod(root.transform, folder, id, level, yaw, lod0Centroid);
+                    if (lod == null) break;
+                    lods.Add(lod.GetComponentsInChildren<Renderer>());
+                    lowest = lod;
+                }
+                if (lods.Count > 1)
+                {
+                    float[] heights = modelRoot == StallModels ? StallLodHeights : BuildingLodHeights;
+                    var group = root.AddComponent<LODGroup>();
+                    var levels = new LOD[lods.Count];
+                    for (int l = 0; l < lods.Count; l++) levels[l] = new LOD(heights[l], lods[l]);
+                    group.SetLODs(levels);
+                    group.RecalculateBounds();
+                }
+
+                // Collide against the lowest LOD (a few thousand tris cook and rasterize into the navmesh
+                // quickly); without LODs, against the model itself if it's small enough.
+                if (lowest != null)
+                {
+                    var collision = new GameObject("Collision").transform;
+                    collision.SetParent(root.transform, false);
+                    var src = lowest.GetComponentInChildren<MeshFilter>();
+                    collision.SetPositionAndRotation(src.transform.position, src.transform.rotation);
+                    collision.localScale = src.transform.lossyScale;
+                    collision.gameObject.AddComponent<MeshCollider>().sharedMesh = src.sharedMesh;
+                }
+                else
+                {
+                    foreach (var mf in inst.GetComponentsInChildren<MeshFilter>())
                     {
-                        Debug.LogWarning($"[BuildingShowcase] {id}: {mf.sharedMesh.GetIndexCount(0) / 3} tris, skipping MeshCollider until reduced");
-                        continue;
+                        // Raw Meshy meshes (millions of tris) take minutes to cook; collide only once reduced.
+                        if (mf.sharedMesh.GetIndexCount(0) / 3 > MaxColliderTris)
+                        {
+                            Debug.LogWarning($"[BuildingShowcase] {id}: {mf.sharedMesh.GetIndexCount(0) / 3} tris, skipping MeshCollider until reduced");
+                            continue;
+                        }
+                        mf.gameObject.AddComponent<MeshCollider>().sharedMesh = mf.sharedMesh;
                     }
-                    var col = mr.gameObject.AddComponent<MeshCollider>();
-                    col.sharedMesh = mf.sharedMesh;
                 }
                 root.isStatic = true;
                 foreach (Transform t in root.GetComponentsInChildren<Transform>()) t.gameObject.isStatic = true;
@@ -238,34 +285,81 @@ namespace WorldRPG.EditorTools
             }
         }
 
+        /// <summary>
+        /// Adds <id>_LOD<level>.fbx (if rebaked) under the prefab root with its own baked material, moved onto
+        /// LOD0. Every LOD is scaled to the same real height in Blender, but centred on its own bounding box, and
+        /// at low triangle counts the debris pass can drop a protruding piece (09_Apothecary LOD2 lost 0.7 m of
+        /// width), which shifts that centre. So LODs are aligned by their area-weighted surface centroids, which
+        /// such a piece barely moves, rather than stretched onto LOD0's bounds.
+        /// </summary>
+        static GameObject AddLod(Transform root, string folder, string id, int level, float yaw, Vector3 target)
+        {
+            string lodId = $"{id}_LOD{level}";
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>($"{folder}/{lodId}.fbx");
+            if (model == null) return null;
+
+            Material mat = BuildMaterial(folder, lodId);
+            var lod = (GameObject)PrefabUtility.InstantiatePrefab(model, root);
+            lod.name = $"LOD{level}";
+            lod.transform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+            foreach (var mr in lod.GetComponentsInChildren<MeshRenderer>()) mr.sharedMaterial = mat;
+
+            Vector3 offset = target - SurfaceCentroid(lod);
+            offset.y = 0f;   // both stand on y = 0
+            lod.transform.localPosition += offset;
+            return lod;
+        }
+
+        /// <summary>Area-weighted centroid of all triangles under go, in world space (imported meshes are readable in the editor).</summary>
+        static Vector3 SurfaceCentroid(GameObject go)
+        {
+            Vector3 sum = Vector3.zero;
+            double area = 0;
+            foreach (var mf in go.GetComponentsInChildren<MeshFilter>())
+            {
+                Matrix4x4 m = mf.transform.localToWorldMatrix;
+                Vector3[] v = mf.sharedMesh.vertices;
+                int[] t = mf.sharedMesh.triangles;
+                for (int i = 0; i < t.Length; i += 3)
+                {
+                    Vector3 a = m.MultiplyPoint3x4(v[t[i]]), b = m.MultiplyPoint3x4(v[t[i + 1]]), c = m.MultiplyPoint3x4(v[t[i + 2]]);
+                    float w = Vector3.Cross(b - a, c - a).magnitude;
+                    sum += (a + b + c) * (w / 3f);
+                    area += w;
+                }
+            }
+            return area > 0 ? sum / (float)area : go.transform.position;
+        }
+
+        // Painted gongbi shading to match the InkToon characters (falls back to URP/Lit if the shader is missing).
+        const string BuildingShader = "WorldRPG/InkPaint";
+
         static Material BuildMaterial(string folder, string id)
         {
             string path = $"{folder}/{id}_Mat.mat";
+            Shader shader = Shader.Find(BuildingShader) ?? Shader.Find("Universal Render Pipeline/Lit");
             var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
             if (mat == null)
             {
-                mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                mat = new Material(shader);
                 AssetDatabase.CreateAsset(mat, path);
             }
+            // Switching shader keeps the shared properties (textures, colour, cull) and resets the rest to the
+            // new shader's defaults; artist tweaks to InkPaint properties survive later rebuilds.
+            if (mat.shader != shader) mat.shader = shader;
 
             var baseMap = AssetDatabase.LoadAssetAtPath<Texture2D>($"{folder}/Textures/{id}_BaseColor.png");
             var normal = AssetDatabase.LoadAssetAtPath<Texture2D>($"{folder}/Textures/{id}_Normal.png");
-            var metal = AssetDatabase.LoadAssetAtPath<Texture2D>($"{folder}/Textures/{id}_MetallicSmoothness.png");
 
             mat.SetTexture("_BaseMap", baseMap);
             mat.SetColor("_BaseColor", Color.white);
             mat.SetTexture("_BumpMap", normal);
-            mat.SetFloat("_BumpScale", 1f);
-            mat.SetTexture("_MetallicGlossMap", metal);
-            // With a map this scales its alpha; base-colour-only sets get a matte timber/plaster look.
-            mat.SetFloat("_Smoothness", metal != null ? 1f : 0.15f);
-            mat.SetFloat("_Metallic", 0f);
-            mat.SetFloat("_SmoothnessTextureChannel", 0f);
+            mat.SetFloat("_UseNormalMap", normal != null ? 1f : 0f);
             // Meshy awnings/banners are single sheets; render both faces.
             mat.SetFloat("_Cull", 0f);
             mat.doubleSidedGI = true;
             if (normal != null) mat.EnableKeyword("_NORMALMAP"); else mat.DisableKeyword("_NORMALMAP");
-            if (metal != null) mat.EnableKeyword("_METALLICSPECGLOSSMAP"); else mat.DisableKeyword("_METALLICSPECGLOSSMAP");
+            mat.DisableKeyword("_METALLICSPECGLOSSMAP");
             EditorUtility.SetDirty(mat);
             return mat;
         }
@@ -327,7 +421,8 @@ namespace WorldRPG.EditorTools
         }
 
         // Mesh bounds in prefab space (no instantiation, so it works for the raw multi-million-tri meshes too).
-        static Bounds PrefabBounds(GameObject prefab)
+        // LODs are fitted to LOD0, so including them changes nothing.
+        internal static Bounds PrefabBounds(GameObject prefab)
         {
             var filters = prefab.GetComponentsInChildren<MeshFilter>();
             Bounds b = default;

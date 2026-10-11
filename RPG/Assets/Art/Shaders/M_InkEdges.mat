@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_InkEdges
+  m_Shader: {fileID: 4800000, guid: 90f1f6af920fa074aa0c9fbde00bda59, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _DepthThreshold: 0.025
+    - _HazeEnd: 520
+    - _HazeStart: 170
+    - _HazeStrength: 0.35
+    - _InnerFadeEnd: 110
+    - _InnerFadeStart: 40
+    - _LineFadeEnd: 260
+    - _LineFadeStart: 90
+    - _LineStrength: 0.7
+    - _LineWidth: 1
+    - _NormalThreshold: 0.45
+    - _PaperGrain: 0.025
+    - _SunGlowRadius: 0.85
+    - _SunGlowStrength: 0.32
+    m_Colors:
+    - _HazeColor: {r: 0.84, g: 0.84, b: 0.82, a: 1}
+    - _InkColor: {r: 0.19999996, g: 0.17999998, b: 0.16999996, a: 1}
+    - _SunGlowCenter: {r: 0.95, g: 1.05, b: 0, a: 0}
+    - _SunGlowColor: {r: 1, g: 0.97999996, b: 0.94, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

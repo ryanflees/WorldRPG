@@ -4,6 +4,8 @@
 //  - Ink rim: a brushy dark contour on the inner silhouette.
 //  - Ink outline: inverted hull whose width swells and thins like a brush stroke, with
 //    dry-brush (飞白) gaps where the stroke runs out of ink.
+//  - Rim and outline fade out with camera distance: from the high RTS view a figure is only a few dozen
+//    pixels tall and the ink would swallow it, so far figures read by colour and light instead.
 // The outline and brush noise read TEXCOORD7 (masked smooth normal in tangent space + stroke noise),
 // baked at import by InkOutlineDataBaker for models under Assets/Art/Characters.
 Shader "WorldRPG/InkToon"
@@ -13,6 +15,10 @@ Shader "WorldRPG/InkToon"
         [Header(Surface)]
         [MainTexture] _BaseMap("Base Map", 2D) = "white" {}
         [MainColor] _BaseColor("Base Color", Color) = (1, 1, 1, 1)
+        [Header(Distance)]
+        _InkFadeStart("Ink Fade Start (m)", Float) = 18
+        _InkFadeEnd("Ink Fade End (m)", Float) = 50
+
         [Toggle(_NORMALMAP)] _UseNormalMap("Use Normal Map", Float) = 1
         [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
         _BumpScale("Normal Scale", Range(0, 2)) = 0.5
@@ -79,6 +85,8 @@ Shader "WorldRPG/InkToon"
             half _OutlineVariation;
             half _OutlineDryBrush;
             float _OutlineDepthOffset;
+            float _InkFadeStart;
+            float _InkFadeEnd;
         CBUFFER_END
 
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -93,6 +101,12 @@ Shader "WorldRPG/InkToon"
             float3 smoothOS = tangentOS.xyz * inkData.x + bitangentOS * inkData.y + normalOS * inkData.z;
             mask = saturate(length(inkData.xyz));
             return mask > 1e-3 ? smoothOS : normalOS;
+        }
+
+        // 1 up close, 0 beyond _InkFadeEnd.
+        float InkFade(float3 positionWS)
+        {
+            return 1 - smoothstep(_InkFadeStart, _InkFadeEnd, distance(positionWS, GetCameraPositionWS()));
         }
         ENDHLSL
 
@@ -116,6 +130,7 @@ Shader "WorldRPG/InkToon"
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
             #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
+            #pragma multi_compile_fragment _ _LIGHT_COOKIES
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
 
@@ -230,7 +245,7 @@ Shader "WorldRPG/InkToon"
                 half brush = (input.inkNoise - 0.5) * _InkRimBreakup;
                 half rimEdge = 1 - _InkRimWidth;
                 half rim = smoothstep(rimEdge - _InkRimSoftness, rimEdge + _InkRimSoftness, fresnel + brush);
-                color = lerp(color, _InkColor.rgb, rim * _InkRimStrength);
+                color = lerp(color, _InkColor.rgb, rim * _InkRimStrength * InkFade(input.positionWS));
 
                 color = MixFog(color, input.fogFactor);
                 return half4(color, 1);
@@ -267,6 +282,7 @@ Shader "WorldRPG/InkToon"
                 float4 positionCS : SV_POSITION;
                 half   inkNoise   : TEXCOORD0;
                 half   fogFactor  : TEXCOORD1;
+                half   inkFade    : TEXCOORD2;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -276,6 +292,8 @@ Shader "WorldRPG/InkToon"
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, output);
 
+                half fade = InkFade(TransformObjectToWorld(input.positionOS.xyz));
+                output.inkFade = fade;
                 float mask;
                 float3 normalWS = TransformObjectToWorldNormal(SmoothNormalOS(input.normalOS, input.tangentOS, input.inkData, mask));
                 float3 positionVS = TransformWorldToView(TransformObjectToWorld(input.positionOS.xyz));
@@ -287,7 +305,7 @@ Shader "WorldRPG/InkToon"
                 float pixels = clamp(_OutlineWidth * pixelsPerMeter, _OutlineMinPixels, _OutlineMaxPixels);
                 // Brush pressure: the stroke swells and thins along the surface.
                 half pressure = 0.25 + 1.25 * smoothstep(0.2, 0.8, input.inkData.w);
-                pixels *= lerp(1, pressure, _OutlineVariation) * mask;
+                pixels *= lerp(1, pressure, _OutlineVariation) * mask * fade;
 
                 // Push the hull back along the view ray so it hides behind overlapping parts and
                 // only reads at true silhouettes. Scaled with the stroke's real size: far away the
@@ -311,6 +329,7 @@ Shader "WorldRPG/InkToon"
             {
                 // Dry brush: where the stroke is thinnest, let it break up entirely.
                 clip(input.inkNoise - _OutlineDryBrush);
+                clip(input.inkFade - 0.02);   // faded out: no hull at all (not even a sub-pixel speckle)
                 return half4(MixFog(_OutlineColor.rgb, input.fogFactor), 1);
             }
             ENDHLSL

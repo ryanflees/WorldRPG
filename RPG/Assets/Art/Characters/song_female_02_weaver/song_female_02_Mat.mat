@@ -99,7 +99,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _AmbientStrength: 0.3
+    - _AmbientStrength: 0.6
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 0.5
@@ -116,6 +116,8 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _InkFadeEnd: 50
+    - _InkFadeStart: 18
     - _InkRimBreakup: 0.45
     - _InkRimSoftness: 0.06
     - _InkRimStrength: 0.75
@@ -125,7 +127,7 @@ Material:
     - _OutlineDepthOffset: 0.04
     - _OutlineDryBrush: 0.12
     - _OutlineMaxPixels: 7
-    - _OutlineMinPixels: 1.2
+    - _OutlineMinPixels: 0.8
     - _OutlineVariation: 0.7
     - _OutlineWidth: 0.02
     - _PaperTint: 0.25
@@ -149,12 +151,12 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _CoreShadowColor: {r: 0.36, g: 0.37, b: 0.48, a: 1}
+    - _CoreShadowColor: {r: 0.56, g: 0.55, b: 0.62, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _InkColor: {r: 0.07, g: 0.07, b: 0.09, a: 1}
     - _OutlineColor: {r: 0.05, g: 0.05, b: 0.07, a: 1}
     - _PaperColor: {r: 0.97, g: 0.92, b: 0.8, a: 1}
-    - _ShadowColor: {r: 0.58, g: 0.6, b: 0.7, a: 1}
+    - _ShadowColor: {r: 0.74, g: 0.73, b: 0.77, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -33,7 +33,10 @@ namespace WorldRPG.EditorTools
         [MenuItem("WorldRPG/NPC/Setup Vendor Stalls In Open Scene")]
         static void StallsFromMenu() => Debug.Log(SetupVendorStalls());
 
-        public static string SetupNavigation()
+        public static string SetupNavigation() => SetupNavigation(GraphCenter, GraphSize);
+
+        /// <summary>Same, for a level whose navmesh covers a different box than the TownDemo's.</summary>
+        public static string SetupNavigation(Vector3 graphCenter, Vector3 graphSize)
         {
             int characterLayer = LayerMask.NameToLayer(CharacterLayerName);
             if (characterLayer < 0) return $"Add a '{CharacterLayerName}' layer first (Project Settings > Tags and Layers).";
@@ -63,8 +66,8 @@ namespace WorldRPG.EditorTools
 
             var graph = astar.data.recastGraph ?? astar.data.AddGraph<RecastGraph>();
             graph.name = "Town";
-            graph.forcedBoundsCenter = GraphCenter;
-            graph.forcedBoundsSize = GraphSize;
+            graph.forcedBoundsCenter = graphCenter;
+            graph.forcedBoundsSize = graphSize;
             graph.cellSize = 0.2f;
             graph.characterRadius = 0.3f;
             graph.walkableHeight = 1.8f;
@@ -117,15 +120,16 @@ namespace WorldRPG.EditorTools
         static readonly NPCRole[] VendorRoles = { NPCRole.MarketVendor, NPCRole.TeaVendor, NPCRole.Shopkeeper };
 
         /// <summary>
-        /// Adds a VendorStall (vendor post + customer area + navmesh blocker) to every "Stall" object, and posts a
-        /// villager behind all but <paramref name="unattended"/> of them so both cases can be seen.
+        /// Adds a VendorStall (vendor post + customer area + navmesh blocker) to every greybox "Stall" object and
+        /// every object that already has a VendorStall (the Meshy stall prefabs placed by a level builder), and
+        /// posts a villager behind all but <paramref name="unattended"/> of them so both cases can be seen.
         /// </summary>
         public static string SetupVendorStalls(int unattended = 2)
         {
             var stalls = new List<Transform>();
             foreach (var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID))
-                if (t.name == "Stall") stalls.Add(t);
-            if (stalls.Count == 0) return "No objects named 'Stall' in the scene.";
+                if (t.name == "Stall" || t.GetComponent<VendorStall>() != null) stalls.Add(t);
+            if (stalls.Count == 0) return "No stalls (objects named 'Stall' or with a VendorStall) in the scene.";
             Physics.SyncTransforms();   // spots are snapped to the ground with raycasts
 
             var free = new List<NPC>(Object.FindObjectsByType<NPC>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID));
@@ -172,10 +176,24 @@ namespace WorldRPG.EditorTools
         static void BuildSpots(VendorStall stall)
         {
             Transform t = stall.transform;
-            // Stalls are axis-aligned tables (2 m along X, 1.1 m along Z). Customers stand at the long
-            // side facing the plaza centre (in Z), the vendor across the table.
-            const float halfDepth = 0.55f, halfWidth = 1.0f;
-            Vector3 front = new Vector3(0f, 0f, t.position.z > 0f ? -1f : 1f);
+            float halfDepth, halfWidth;
+            Vector3 front;
+            if (t.Find("Table") != null)
+            {
+                // Greybox stalls are axis-aligned tables (2 m along X, 1.1 m along Z). Customers stand at the
+                // long side facing the plaza centre (in Z), the vendor across the table.
+                halfDepth = 0.55f;
+                halfWidth = 1.0f;
+                front = new Vector3(0f, 0f, t.position.z > 0f ? -1f : 1f);
+            }
+            else
+            {
+                // Meshy stall prefabs: +Z is the customer side (goods on display), -Z the vendor's.
+                Bounds local = LocalFootprint(t);
+                halfDepth = local.extents.z;
+                halfWidth = local.extents.x;
+                front = t.forward;
+            }
 
             stall.vendorPost = Spot(t, "VendorPost", -front * (halfDepth + 0.45f), front);
             // Customers browse anywhere in a strip along the counter, 0.4–1.2 m in front of it.
@@ -201,7 +219,7 @@ namespace WorldRPG.EditorTools
             if (blockerLayer >= 0) blocker.gameObject.layer = blockerLayer;
             const float depth = 1.3f;
             blocker.position = t.position - front * (halfDepth + depth * 0.5f) + Vector3.up * 0.5f;
-            blocker.rotation = Quaternion.identity;
+            blocker.rotation = Quaternion.LookRotation(front);
             blocker.GetComponent<BoxCollider>().size = new Vector3(halfWidth * 2f + 0.6f, 1f, depth);
             // Solid + unwalkable: no navmesh inside the box *or* on its top face.
             var modifier = blocker.GetComponent<RecastNavmeshModifier>();
@@ -211,6 +229,27 @@ namespace WorldRPG.EditorTools
             modifier.dynamic = false;
             modifier.geometrySource = RecastNavmeshModifier.GeometrySource.Collider;
             modifier.includeInScan = RecastNavmeshModifier.ScanInclusion.AlwaysInclude;
+        }
+
+        /// <summary>Stall footprint in its own space, from the full-detail model (LOD0).</summary>
+        static Bounds LocalFootprint(Transform stall)
+        {
+            Transform model = stall.Find("Model") ?? stall;
+            var b = new Bounds();
+            bool first = true;
+            foreach (var mf in model.GetComponentsInChildren<MeshFilter>())
+            {
+                Matrix4x4 m = stall.worldToLocalMatrix * mf.transform.localToWorldMatrix;
+                Bounds mb = mf.sharedMesh.bounds;
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector3 p = m.MultiplyPoint3x4(mb.center + Vector3.Scale(mb.extents,
+                        new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f)));
+                    if (first) { b = new Bounds(p, Vector3.zero); first = false; }
+                    else b.Encapsulate(p);
+                }
+            }
+            return b;
         }
 
         static Transform Spot(Transform parent, string name, Vector3 worldOffset, Vector3 facing)
