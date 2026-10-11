@@ -14,10 +14,14 @@ namespace WorldRPG.EditorTools
     /// </summary>
     public static class BuildingShowcaseBuilder
     {
-        const string ModelRoot = "Assets/Art/Buildings/SongDynasty";
-        const string PrefabRoot = "Assets/Prefabs/Buildings/SongDynasty";
+        // (model folder, prefab folder) per Meshy set; each model lives in <model folder>/<id>/<id>.fbx
+        const string BuildingModels = "Assets/Art/Buildings/SongDynasty";
+        const string BuildingPrefabs = "Assets/Prefabs/Buildings/SongDynasty";
+        const string StallModels = "Assets/Art/Buildings/Stalls";
+        const string StallPrefabs = "Assets/Prefabs/Stalls";
         const string SourceScene = "Assets/Workshop/TownDemo.unity";
         const string ScenePath = "Assets/Workshop/BuildingShowcase.unity";
+        const string StallScenePath = "Assets/Workshop/StallShowcase.unity";
         // One scene per building, for reviewing each one up close.
         const string SingleSceneFolder = "Assets/Workshop/BuildingS";
         const string MatFolder = "Assets/Workshop/Materials";
@@ -42,6 +46,13 @@ namespace WorldRPG.EditorTools
             Build();
         }
 
+        [MenuItem("WorldRPG/Buildings/Build Stall Showcase Scene")]
+        static void BuildStallSceneFromMenu()
+        {
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            BuildStalls();
+        }
+
         [MenuItem("WorldRPG/Buildings/Build Per-Building Scenes")]
         static void BuildSingleScenesFromMenu()
         {
@@ -51,10 +62,26 @@ namespace WorldRPG.EditorTools
 
         public static string Build()
         {
-            List<GameObject> prefabs = BuildPrefabs();
-            if (prefabs.Count == 0) return "No building models to show.";
+            var prefabs = new List<GameObject>();
+            BuildPrefabs(BuildingModels, BuildingPrefabs, prefabs);
+            AssetDatabase.SaveAssets();
+            return BuildShowcase(prefabs, ScenePath, 40f, Gap, 0.1f);
+        }
 
-            Scene scene = OpenTownCopy(ScenePath);
+        public static string BuildStalls()
+        {
+            var prefabs = new List<GameObject>();
+            BuildPrefabs(StallModels, StallPrefabs, prefabs);
+            AssetDatabase.SaveAssets();
+            // Stalls are only 2-3.5 m wide: spread them out so the signs don't overlap.
+            return BuildShowcase(prefabs, StallScenePath, 20f, 6f, 0.05f);
+        }
+
+        static string BuildShowcase(List<GameObject> prefabs, string scenePath, float cameraDistance, float gap, float labelSize)
+        {
+            if (prefabs.Count == 0) return "No models to show.";
+
+            Scene scene = OpenTownCopy(scenePath);
 
             var root = new GameObject("BuildingShowcase").transform;
 
@@ -67,13 +94,13 @@ namespace WorldRPG.EditorTools
             {
                 sizes[i] = PrefabBounds(prefabs[i]).size;
                 int row = i / Columns;
-                rowWidth[row] += sizes[i].x + (i % Columns > 0 ? Gap : 0f);
+                rowWidth[row] += sizes[i].x + (i % Columns > 0 ? gap : 0f);
                 rowDepth[row] = Mathf.Max(rowDepth[row], sizes[i].z);
             }
             float width = Mathf.Max(rowWidth);
             var rowZ = new float[rows];
             for (int r = 1; r < rows; r++)
-                rowZ[r] = rowZ[r - 1] + rowDepth[r - 1] / 2f + StreetWidth + Gap + rowDepth[r] / 2f;
+                rowZ[r] = rowZ[r - 1] + rowDepth[r - 1] / 2f + StreetWidth + gap + rowDepth[r] / 2f;
             float depth = rowZ[rows - 1];
             BuildGround(root, width, depth, rowZ, rowDepth);
 
@@ -84,21 +111,21 @@ namespace WorldRPG.EditorTools
                 if (col == 0) x = -rowWidth[row] / 2f;
                 // Prefab pivot is bottom centre; rotated 180 so the front faces the street to the south (-Z).
                 var pos = new Vector3(x + sizes[i].x / 2f, 0f, rowZ[row]);
-                x += sizes[i].x + Gap;
+                x += sizes[i].x + gap;
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefabs[i], root);
                 go.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, 180f, 0f));
 
-                Label(root, prefabs[i].name, new Vector3(pos.x, 0f, rowZ[row] - rowDepth[row] / 2f - 1f));
+                Label(root, prefabs[i].name, new Vector3(pos.x, 0f, rowZ[row] - rowDepth[row] / 2f - 1f), labelSize);
             }
 
             var player = GameObject.Find("Player");
             if (player != null) player.transform.position = new Vector3(0f, 0.05f, -rowDepth[0] / 2f - StreetWidth - 2f);
 
-            FrameRig(new Vector2(-width / 2f - 30f, -40f), new Vector2(width / 2f + 30f, depth + 30f), 40f);
+            FrameRig(new Vector2(-width / 2f - 30f, -40f), new Vector2(width / 2f + 30f, depth + 30f), cameraDistance);
 
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
-            return ScenePath;
+            return scenePath;
         }
 
         public static string BuildSingleScenes()
@@ -116,7 +143,7 @@ namespace WorldRPG.EditorTools
                 BuildGround(root, size.x, 0f, new[] { 0f }, new[] { size.z });
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, root);
                 go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
-                Label(root, prefab.name, new Vector3(-size.x / 2f - 1.5f, 0f, -size.z / 2f - 1f));
+                Label(root, prefab.name, new Vector3(-size.x / 2f - 1.5f, 0f, -size.z / 2f - 1f), 0.1f);
 
                 var player = GameObject.Find("Player");
                 if (player != null) player.transform.position = new Vector3(0f, 0.05f, -size.z / 2f - StreetWidth - 2f);
@@ -156,18 +183,26 @@ namespace WorldRPG.EditorTools
         public static List<GameObject> BuildPrefabs()
         {
             var result = new List<GameObject>();
-            if (!Directory.Exists(ModelRoot))
-            {
-                Debug.LogWarning($"[BuildingShowcase] no building models in {ModelRoot} (run References/MeshyModels/process_buildings.sh)");
-                return result;
-            }
-            EnsureFolder(PrefabRoot);
+            BuildPrefabs(BuildingModels, BuildingPrefabs, result);
+            BuildPrefabs(StallModels, StallPrefabs, result);
+            AssetDatabase.SaveAssets();
+            return result;
+        }
 
-            foreach (string dir in Directory.GetDirectories(ModelRoot))
+        static void BuildPrefabs(string modelRoot, string prefabRoot, List<GameObject> result)
+        {
+            if (!Directory.Exists(modelRoot))
+            {
+                Debug.LogWarning($"[BuildingShowcase] no models in {modelRoot} (run References/MeshyModels/rebake_building.sh)");
+                return;
+            }
+            EnsureFolder(prefabRoot);
+
+            foreach (string dir in Directory.GetDirectories(modelRoot))
             {
                 string id = Path.GetFileName(dir);
                 if (id.StartsWith("PolyFew")) continue; // local PolyFewBackup (git-ignored), not a building
-                string folder = $"{ModelRoot}/{id}";
+                string folder = $"{modelRoot}/{id}";
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>($"{folder}/{id}.fbx");
                 if (model == null)
                 {
@@ -197,12 +232,10 @@ namespace WorldRPG.EditorTools
                 root.isStatic = true;
                 foreach (Transform t in root.GetComponentsInChildren<Transform>()) t.gameObject.isStatic = true;
 
-                var prefab = PrefabUtility.SaveAsPrefabAsset(root, $"{PrefabRoot}/{id}.prefab");
+                var prefab = PrefabUtility.SaveAsPrefabAsset(root, $"{prefabRoot}/{id}.prefab");
                 Object.DestroyImmediate(root);
                 result.Add(prefab);
             }
-            AssetDatabase.SaveAssets();
-            return result;
         }
 
         static Material BuildMaterial(string folder, string id)
@@ -266,7 +299,7 @@ namespace WorldRPG.EditorTools
             }
         }
 
-        static void Label(Transform root, string id, Vector3 pos)
+        static void Label(Transform root, string id, Vector3 pos, float size)
         {
             var post = GameObject.CreatePrimitive(PrimitiveType.Cube);
             post.name = $"Sign_{id}";
@@ -287,7 +320,7 @@ namespace WorldRPG.EditorTools
             tm.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             tm.GetComponent<MeshRenderer>().sharedMaterial = tm.font.material;
             tm.fontSize = 64;
-            tm.characterSize = 0.1f;
+            tm.characterSize = size;
             tm.anchor = TextAnchor.LowerCenter;
             tm.alignment = TextAlignment.Center;
             tm.color = new Color(1f, 0.95f, 0.8f);
