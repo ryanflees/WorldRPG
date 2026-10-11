@@ -180,8 +180,9 @@ namespace WorldRPG.EditorTools
                 float c = StreetCenters[i], w = StreetWidths[i];
                 // The main avenue runs out through the city gates.
                 float length = c == 0f ? 178f : WallHalfExtent * 2f - 4f;
-                Box($"Street_NS_{i}", streets, new Vector3(c, 0.01f, 0f), new Vector3(w, 0.02f, length), _street, false);
-                Box($"Street_EW_{i}", streets, new Vector3(0f, 0.011f, c), new Vector3(length, 0.02f, w), _street, false);
+                // Colliders on the visible street/paving slabs so characters stand on them, not sunk 2-4 cm into them.
+                Box($"Street_NS_{i}", streets, new Vector3(c, 0.01f, 0f), new Vector3(w, 0.02f, length), _street);
+                Box($"Street_EW_{i}", streets, new Vector3(0f, 0.011f, c), new Vector3(length, 0.02f, w), _street);
             }
         }
 
@@ -279,7 +280,7 @@ namespace WorldRPG.EditorTools
         static void BuildPlaza(Transform town)
         {
             var plaza = Group("Plaza", town);
-            Box("Paving", plaza, new Vector3(0f, 0.02f, 0f), new Vector3(PlazaHalfSize * 2f, 0.04f, PlazaHalfSize * 2f), _stone, false);
+            Box("Paving", plaza, new Vector3(0f, 0.02f, 0f), new Vector3(PlazaHalfSize * 2f, 0.04f, PlazaHalfSize * 2f), _stone);
 
             // Central pavilion on a raised platform with steps.
             var pavilion = Group("Pavilion", plaza, new Vector3(0f, 0f, 6f));

@@ -23,10 +23,21 @@ namespace WorldRPG
         public float runThreshold = 1f;
         public float sprintThreshold = 1.3f;
 
+        /// <summary>
+        /// Clip speeds are authored for a human scale of 1 and playback speed 1; this scales them to the
+        /// avatar and to the animator's playback speed (NPCs play at slightly different speeds).
+        /// </summary>
+        public static float ClipSpeedScale(Animator animator)
+        {
+            return (animator.isHuman ? animator.humanScale : 1f) * Mathf.Max(animator.speed, 0.01f);
+        }
+
+        /// <summary>Movement speed (m/s) at which the walk cycle plays without foot sliding.</summary>
+        public float WalkSpeed(Animator animator) => walkClipSpeed * ClipSpeedScale(animator);
+
         public float SpeedToBlend(float speed, Animator animator)
         {
-            // Clip speeds are authored for a human scale of 1; scale them to this avatar.
-            float scale = animator.isHuman ? animator.humanScale : 1f;
+            float scale = ClipSpeedScale(animator);
             float walk = walkClipSpeed * scale, run = runClipSpeed * scale, sprint = sprintClipSpeed * scale;
 
             if (speed <= walk) return Mathf.Lerp(0f, walkThreshold, speed / walk);

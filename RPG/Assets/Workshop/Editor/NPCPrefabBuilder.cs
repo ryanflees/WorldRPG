@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Path = System.IO.Path;
+using Pathfinding;
+using Pathfinding.RVO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -16,6 +19,7 @@ namespace WorldRPG.EditorTools
     {
         const string CharactersFolder = "Assets/Art/Characters";
         const string VillagerFolderPrefix = "song_";
+        const string ProtagonistSuffix = "_protagonist_thief";
         const string PrefabFolder = "Assets/Prefabs/NPC/Villagers";
         const string ControllerPath = "Assets/Art/Characters/AnimatorController/BasicAC.controller";
         const int Seed = 27;
@@ -51,6 +55,7 @@ namespace WorldRPG.EditorTools
             {
                 string folderName = Path.GetFileName(folder);
                 if (!folderName.StartsWith(VillagerFolderPrefix)) continue;
+                if (folderName.EndsWith(ProtagonistSuffix)) continue; // main character, not a villager
 
                 string[] models = AssetDatabase.FindAssets("t:Model", new[] { folder });
                 if (models.Length == 0) continue;
@@ -89,6 +94,7 @@ namespace WorldRPG.EditorTools
                 var locomotion = root.AddComponent<NPCLocomotionAnimator>();
                 locomotion.animator = animator;
                 root.AddComponent<NPCIdleAnimator>();
+                AddNavigation(root);
 
                 return PrefabUtility.SaveAsPrefabAsset(root, $"{PrefabFolder}/{root.name}.prefab");
             }
@@ -96,6 +102,37 @@ namespace WorldRPG.EditorTools
             {
                 Object.DestroyImmediate(root);
             }
+        }
+
+        /// <summary>A* RichAI agent + RVO avoidance + the wander/chat brain, on the Character layer.</summary>
+        static void AddNavigation(GameObject root)
+        {
+            int characterLayer = LayerMask.NameToLayer(NPCNavigationSetup.CharacterLayerName);
+            if (characterLayer >= 0)
+                foreach (Transform t in root.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = characterLayer;
+
+            root.AddComponent<Seeker>();
+            var ai = root.AddComponent<RichAI>();
+            ai.radius = 0.3f;
+            ai.height = 1.8f;
+            ai.maxSpeed = 1.4f;          // NPCBrain sets it to the walk cycle's speed when walking
+            ai.acceleration = 4f;
+            ai.rotationSpeed = 300f;
+            ai.slowdownTime = 0.6f;
+            ai.endReachedDistance = 0.25f;
+            ai.slowWhenNotFacingTarget = true;
+            ai.funnelSimplification = true;
+            // Ground raycasts must ignore the villager's own capsule (and other characters).
+            ai.groundMask = characterLayer >= 0 ? ~(1 << characterLayer) : ~0;
+
+            var rvo = root.AddComponent<RVOController>();
+            rvo.agentTimeHorizon = 1.5f;
+            rvo.obstacleTimeHorizon = 0.5f;
+            rvo.maxNeighbours = 8;
+            rvo.lockWhenNotMoving = true;   // people standing / chatting aren't shoved around
+            rvo.priority = 0.5f;
+
+            root.AddComponent<NPCBrain>();
         }
 
         static NPCRole RoleFor(string folderName, out string roleSuffix)

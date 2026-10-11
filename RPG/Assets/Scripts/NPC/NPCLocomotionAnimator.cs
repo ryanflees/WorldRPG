@@ -24,6 +24,12 @@ namespace WorldRPG
         /// <summary>Measured planar speed in m/s.</summary>
         public float Speed { get; private set; }
 
+        /// <summary>
+        /// Movement speed (m/s) at which the walk cycle plays without foot sliding, for this avatar's
+        /// size and this NPC's playback speed. Movers should walk at this speed.
+        /// </summary>
+        public float WalkSpeed => animator != null ? blend.WalkSpeed(animator) : blend.walkClipSpeed;
+
         void Awake()
         {
             if (animator == null) animator = GetComponentInChildren<Animator>();

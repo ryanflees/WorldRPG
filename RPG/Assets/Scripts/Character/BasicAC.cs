@@ -15,6 +15,10 @@ namespace WorldRPG
         public readonly int[] FemaleIdleStates;
         public readonly int[] MaleIdleStates;
 
+        /// <summary>Standing chat takes performed by female / male mocap actors, on <see cref="IdleLayer"/>.</summary>
+        public readonly int[] FemaleChatStates;
+        public readonly int[] MaleChatStates;
+
         public BasicAC(Animator animator)
         {
             m_Animator = animator;
@@ -27,6 +31,16 @@ namespace WorldRPG
             {
                 L_1__STANDING___IDLE___0_1___MALE_A_ID, L_1__STANDING___IDLE___0_1___MALE_B_ID, L_1__STANDING___IDLE___0_1___MALE_C_ID,
                 L_1__STANDING___IDLE___0_2___MALE_A_ID, L_1__STANDING___IDLE___0_2___MALE_B_ID, L_1__STANDING___IDLE___0_2___MALE_C_ID,
+            };
+            FemaleChatStates = new[]
+            {
+                L_1__STANDING___CHAT___0_1___A___FEMALE_A_ID, L_1__STANDING___CHAT___0_1___B___FEMALE_B_ID, L_1__STANDING___CHAT___0_1___B___FEMALE_C_ID,
+                L_1__STANDING___CHAT___0_2___A___FEMALE_A_ID, L_1__STANDING___CHAT___0_2___B___FEMALE_B_ID, L_1__STANDING___CHAT___0_2___B___FEMALE_C_ID,
+            };
+            MaleChatStates = new[]
+            {
+                L_1__STANDING___CHAT___0_1___A___MALE_A_ID, L_1__STANDING___CHAT___0_1___A___MALE_B_ID, L_1__STANDING___CHAT___0_1___B___MALE_C_ID,
+                L_1__STANDING___CHAT___0_2___A___MALE_A_ID, L_1__STANDING___CHAT___0_2___C___MALE_B_ID, L_1__STANDING___CHAT___0_2___C___MALE_C_ID,
             };
         }
 

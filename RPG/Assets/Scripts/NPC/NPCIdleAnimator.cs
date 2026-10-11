@@ -6,6 +6,7 @@ namespace WorldRPG
     /// Plays random standing idles on BasicAC's IdleLayer whenever the NPC stands still. The layer
     /// fully overrides the base locomotion layer while standing: idles chain back to back, and the
     /// layer only fades out once the NPC starts moving. The idle pool follows the NPC's gender.
+    /// While <see cref="Chatting"/> is set (by NPCBrain), standing chat takes are chained instead.
     /// </summary>
     [RequireComponent(typeof(NPCLocomotionAnimator))]
     public class NPCIdleAnimator : MonoBehaviour
@@ -24,7 +25,8 @@ namespace WorldRPG
 
         NPCLocomotionAnimator _locomotion;
         BasicAC _ac;
-        int[] _pool;
+        int[] _idlePool, _chatPool;
+        bool _chatting;
         int _current;   // state ID playing on the idle layer, 0 when none
         float _weight;
         bool _parked;   // idle layer sent back to its Empty state after fading out
@@ -42,16 +44,8 @@ namespace WorldRPG
 
             var npc = GetComponent<NPC>();
             bool female = npc != null && npc.gender == NPCGender.Female;
-            if (mixGenders)
-            {
-                _pool = new int[_ac.FemaleIdleStates.Length + _ac.MaleIdleStates.Length];
-                _ac.FemaleIdleStates.CopyTo(_pool, 0);
-                _ac.MaleIdleStates.CopyTo(_pool, _ac.FemaleIdleStates.Length);
-            }
-            else
-            {
-                _pool = female ? _ac.FemaleIdleStates : _ac.MaleIdleStates;
-            }
+            _idlePool = mixGenders ? Concat(_ac.FemaleIdleStates, _ac.MaleIdleStates) : female ? _ac.FemaleIdleStates : _ac.MaleIdleStates;
+            _chatPool = mixGenders ? Concat(_ac.FemaleChatStates, _ac.MaleChatStates) : female ? _ac.FemaleChatStates : _ac.MaleChatStates;
 
             // NPCs spawn standing: start mid-idle at a random point so a crowd doesn't move in sync.
             _current = PickIdle();
@@ -87,13 +81,41 @@ namespace WorldRPG
             }
         }
 
+        /// <summary>
+        /// Chat instead of idle while standing. Switching cuts the current take short with a cross-fade,
+        /// so a conversation starts (and ends) as soon as the brain decides.
+        /// </summary>
+        public bool Chatting
+        {
+            get => _chatting;
+            set
+            {
+                if (_chatting == value) return;
+                _chatting = value;
+                if (_ac != null && _current != 0)
+                {
+                    _current = PickIdle();
+                    _ac.CrossFadeIdleLayer(_current, crossFadeDuration);
+                }
+            }
+        }
+
         int PickIdle()
         {
-            if (_pool.Length == 1) return _pool[0];
+            int[] pool = _chatting ? _chatPool : _idlePool;
+            if (pool.Length == 1) return pool[0];
             int id;
-            do id = _pool[Random.Range(0, _pool.Length)];
+            do id = pool[Random.Range(0, pool.Length)];
             while (id == _current);
             return id;
+        }
+
+        static int[] Concat(int[] a, int[] b)
+        {
+            var result = new int[a.Length + b.Length];
+            a.CopyTo(result, 0);
+            b.CopyTo(result, a.Length);
+            return result;
         }
 
         /// <summary>Seconds left in the current idle; infinite until its cross-fade has started.</summary>

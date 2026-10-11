@@ -24,12 +24,14 @@ namespace WorldRPG
 
     public enum NPCState
     {
-        Idle,
+        Idle,       // standing around (or tending a stall)
+        Walking,
+        Chatting,
     }
 
     /// <summary>
     /// Root component of every NPC: identity plus the current high-level state.
-    /// Behaviours (wandering, working, talking...) will hang off this later; for now NPCs just stand.
+    /// The state is driven by <see cref="NPCBrain"/> (wander / stand / chat / tend a stall).
     /// The capsule collider gives the player something to click on / bump into.
     /// </summary>
     [DisallowMultipleComponent]
