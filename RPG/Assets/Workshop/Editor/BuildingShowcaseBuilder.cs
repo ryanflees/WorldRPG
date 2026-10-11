@@ -18,15 +18,19 @@ namespace WorldRPG.EditorTools
         const string PrefabRoot = "Assets/Prefabs/Buildings/SongDynasty";
         const string SourceScene = "Assets/Workshop/TownDemo.unity";
         const string ScenePath = "Assets/Workshop/BuildingShowcase.unity";
+        // One scene per building, for reviewing each one up close.
+        const string SingleSceneFolder = "Assets/Workshop/BuildingS";
         const string MatFolder = "Assets/Workshop/Materials";
 
         // Blender exports the Meshy front (-Y) as Unity +Z, so no correction is needed:
         // every prefab faces +Z like the characters.
         const float ModelYaw = 0f;
 
+        const int MaxColliderTris = 300000;
+
         const int Columns = 5;
-        const float CellX = 24f;
-        const float CellZ = 28f;
+        const float Gap = 3f;          // between neighbours in a row, and between a street and the next row
+        const float StreetWidth = 4f;
 
         [MenuItem("WorldRPG/Buildings/Build Building Prefabs")]
         static void BuildPrefabsFromMenu() => BuildPrefabs();
@@ -38,51 +42,113 @@ namespace WorldRPG.EditorTools
             Build();
         }
 
+        [MenuItem("WorldRPG/Buildings/Build Per-Building Scenes")]
+        static void BuildSingleScenesFromMenu()
+        {
+            if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            BuildSingleScenes();
+        }
+
         public static string Build()
         {
             List<GameObject> prefabs = BuildPrefabs();
             if (prefabs.Count == 0) return "No building models to show.";
 
-            AssetDatabase.DeleteAsset(ScenePath);
-            AssetDatabase.CopyAsset(SourceScene, ScenePath);
-            Scene scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
-
-            var town = GameObject.Find("Town");
-            if (town != null) Object.DestroyImmediate(town);
+            Scene scene = OpenTownCopy(ScenePath);
 
             var root = new GameObject("BuildingShowcase").transform;
-            int rows = Mathf.CeilToInt(prefabs.Count / (float)Columns);
-            float width = (Columns - 1) * CellX;
-            float depth = (rows - 1) * CellZ;
-            BuildGround(root, width, depth, rows);
 
+            // Pack each row by the buildings' real footprints (sizes vary 5 m .. 15 m wide).
+            int rows = Mathf.CeilToInt(prefabs.Count / (float)Columns);
+            var rowWidth = new float[rows];
+            var rowDepth = new float[rows];
+            var sizes = new Vector3[prefabs.Count];
+            for (int i = 0; i < prefabs.Count; i++)
+            {
+                sizes[i] = PrefabBounds(prefabs[i]).size;
+                int row = i / Columns;
+                rowWidth[row] += sizes[i].x + (i % Columns > 0 ? Gap : 0f);
+                rowDepth[row] = Mathf.Max(rowDepth[row], sizes[i].z);
+            }
+            float width = Mathf.Max(rowWidth);
+            var rowZ = new float[rows];
+            for (int r = 1; r < rows; r++)
+                rowZ[r] = rowZ[r - 1] + rowDepth[r - 1] / 2f + StreetWidth + Gap + rowDepth[r] / 2f;
+            float depth = rowZ[rows - 1];
+            BuildGround(root, width, depth, rowZ, rowDepth);
+
+            float x = 0f;
             for (int i = 0; i < prefabs.Count; i++)
             {
                 int col = i % Columns, row = i / Columns;
-                var pos = new Vector3(-width / 2f + col * CellX, 0f, row * CellZ);
-                // Face the street to the south (-Z), where the player starts.
+                if (col == 0) x = -rowWidth[row] / 2f;
+                // Prefab pivot is bottom centre; rotated 180 so the front faces the street to the south (-Z).
+                var pos = new Vector3(x + sizes[i].x / 2f, 0f, rowZ[row]);
+                x += sizes[i].x + Gap;
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(prefabs[i], root);
                 go.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, 180f, 0f));
 
-                Bounds b = WorldBounds(go);
-                Label(root, prefabs[i].name, new Vector3(pos.x, 0f, b.min.z - 1.5f));
+                Label(root, prefabs[i].name, new Vector3(pos.x, 0f, rowZ[row] - rowDepth[row] / 2f - 1f));
             }
 
             var player = GameObject.Find("Player");
-            if (player != null) player.transform.position = new Vector3(0f, 0.05f, -14f);
+            if (player != null) player.transform.position = new Vector3(0f, 0.05f, -rowDepth[0] / 2f - StreetWidth - 2f);
 
-            var rig = Object.FindFirstObjectByType<RTSCameraRig>();
-            if (rig != null)
-            {
-                rig.boundsMin = new Vector2(-width / 2f - 30f, -40f);
-                rig.boundsMax = new Vector2(width / 2f + 30f, depth + 30f);
-                rig.distance = 40f;
-                EditorUtility.SetDirty(rig);
-            }
+            FrameRig(new Vector2(-width / 2f - 30f, -40f), new Vector2(width / 2f + 30f, depth + 30f), 40f);
 
             EditorSceneManager.SaveScene(scene);
             AssetDatabase.SaveAssets();
             return ScenePath;
+        }
+
+        public static string BuildSingleScenes()
+        {
+            List<GameObject> prefabs = BuildPrefabs();
+            if (prefabs.Count == 0) return "No building models to show.";
+            EnsureFolder(SingleSceneFolder);
+
+            foreach (GameObject prefab in prefabs)
+            {
+                Scene scene = OpenTownCopy($"{SingleSceneFolder}/{prefab.name}.unity");
+                var root = new GameObject("BuildingShowcase").transform;
+
+                Vector3 size = PrefabBounds(prefab).size;
+                BuildGround(root, size.x, 0f, new[] { 0f }, new[] { size.z });
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, root);
+                go.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
+                Label(root, prefab.name, new Vector3(-size.x / 2f - 1.5f, 0f, -size.z / 2f - 1f));
+
+                var player = GameObject.Find("Player");
+                if (player != null) player.transform.position = new Vector3(0f, 0.05f, -size.z / 2f - StreetWidth - 2f);
+
+                float r = Mathf.Max(size.x, size.z);
+                FrameRig(new Vector2(-r - 10f, -r - 10f), new Vector2(r + 10f, r + 10f), Mathf.Max(15f, r * 2f));
+
+                EditorSceneManager.SaveScene(scene);
+            }
+            AssetDatabase.SaveAssets();
+            return $"{prefabs.Count} scenes in {SingleSceneFolder}";
+        }
+
+        // Copy of TownDemo with the town removed, so player/camera/HUD stay identical.
+        static Scene OpenTownCopy(string path)
+        {
+            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.CopyAsset(SourceScene, path);
+            Scene scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+            var town = GameObject.Find("Town");
+            if (town != null) Object.DestroyImmediate(town);
+            return scene;
+        }
+
+        static void FrameRig(Vector2 boundsMin, Vector2 boundsMax, float distance)
+        {
+            var rig = Object.FindFirstObjectByType<RTSCameraRig>();
+            if (rig == null) return;
+            rig.boundsMin = boundsMin;
+            rig.boundsMax = boundsMax;
+            rig.distance = distance;
+            EditorUtility.SetDirty(rig);
         }
 
         // ------------------------------------------------------------------ prefabs
@@ -100,6 +166,7 @@ namespace WorldRPG.EditorTools
             foreach (string dir in Directory.GetDirectories(ModelRoot))
             {
                 string id = Path.GetFileName(dir);
+                if (id.StartsWith("PolyFew")) continue; // local PolyFewBackup (git-ignored), not a building
                 string folder = $"{ModelRoot}/{id}";
                 var model = AssetDatabase.LoadAssetAtPath<GameObject>($"{folder}/{id}.fbx");
                 if (model == null)
@@ -118,6 +185,12 @@ namespace WorldRPG.EditorTools
                 {
                     mr.sharedMaterial = mat;
                     var mf = mr.GetComponent<MeshFilter>();
+                    // Raw Meshy meshes (millions of tris) take minutes to cook; collide only once reduced.
+                    if (mf.sharedMesh.GetIndexCount(0) / 3 > MaxColliderTris)
+                    {
+                        Debug.LogWarning($"[BuildingShowcase] {id}: {mf.sharedMesh.GetIndexCount(0) / 3} tris, skipping MeshCollider until reduced");
+                        continue;
+                    }
                     var col = mr.gameObject.AddComponent<MeshCollider>();
                     col.sharedMesh = mf.sharedMesh;
                 }
@@ -151,7 +224,9 @@ namespace WorldRPG.EditorTools
             mat.SetTexture("_BumpMap", normal);
             mat.SetFloat("_BumpScale", 1f);
             mat.SetTexture("_MetallicGlossMap", metal);
-            mat.SetFloat("_Smoothness", 1f); // scales the map's alpha
+            // With a map this scales its alpha; base-colour-only sets get a matte timber/plaster look.
+            mat.SetFloat("_Smoothness", metal != null ? 1f : 0.15f);
+            mat.SetFloat("_Metallic", 0f);
             mat.SetFloat("_SmoothnessTextureChannel", 0f);
             // Meshy awnings/banners are single sheets; render both faces.
             mat.SetFloat("_Cull", 0f);
@@ -164,7 +239,7 @@ namespace WorldRPG.EditorTools
 
         // ------------------------------------------------------------------ scene parts
 
-        static void BuildGround(Transform root, float width, float depth, int rows)
+        static void BuildGround(Transform root, float width, float depth, float[] rowZ, float[] rowDepth)
         {
             var ground = AssetDatabase.LoadAssetAtPath<Material>($"{MatFolder}/M_Ground.mat");
             var street = AssetDatabase.LoadAssetAtPath<Material>($"{MatFolder}/M_Street.mat");
@@ -173,18 +248,18 @@ namespace WorldRPG.EditorTools
             g.name = "Ground";
             g.transform.SetParent(root, false);
             g.transform.localPosition = new Vector3(0f, 0f, depth / 2f);
-            g.transform.localScale = new Vector3((width + 80f) / 10f, 1f, (depth + 80f) / 10f);
+            g.transform.localScale = new Vector3((width + 60f) / 10f, 1f, (depth + 60f) / 10f);
             if (ground != null) g.GetComponent<Renderer>().sharedMaterial = ground;
             g.isStatic = true;
 
             // One street in front of each row of buildings.
-            for (int r = 0; r < rows; r++)
+            for (int r = 0; r < rowZ.Length; r++)
             {
                 var s = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 s.name = $"Street_{r}";
                 s.transform.SetParent(root, false);
-                s.transform.localPosition = new Vector3(0f, 0.01f, r * CellZ - CellZ / 2f + 1f);
-                s.transform.localScale = new Vector3(width + 30f, 0.02f, 6f);
+                s.transform.localPosition = new Vector3(0f, 0.01f, rowZ[r] - rowDepth[r] / 2f - StreetWidth / 2f);
+                s.transform.localScale = new Vector3(width + 20f, 0.02f, StreetWidth);
                 if (street != null) s.GetComponent<Renderer>().sharedMaterial = street;
                 Object.DestroyImmediate(s.GetComponent<Collider>());
                 s.isStatic = true;
@@ -218,11 +293,24 @@ namespace WorldRPG.EditorTools
             tm.color = new Color(1f, 0.95f, 0.8f);
         }
 
-        static Bounds WorldBounds(GameObject go)
+        // Mesh bounds in prefab space (no instantiation, so it works for the raw multi-million-tri meshes too).
+        static Bounds PrefabBounds(GameObject prefab)
         {
-            var renderers = go.GetComponentsInChildren<Renderer>();
-            var b = renderers[0].bounds;
-            foreach (var r in renderers) b.Encapsulate(r.bounds);
+            var filters = prefab.GetComponentsInChildren<MeshFilter>();
+            Bounds b = default;
+            for (int i = 0; i < filters.Length; i++)
+            {
+                var m = filters[i].transform.localToWorldMatrix;
+                var mb = filters[i].sharedMesh.bounds;
+                var c = m.MultiplyPoint3x4(mb.center);
+                var e = mb.extents;
+                var ext = new Vector3(
+                    Mathf.Abs(m.m00) * e.x + Mathf.Abs(m.m01) * e.y + Mathf.Abs(m.m02) * e.z,
+                    Mathf.Abs(m.m10) * e.x + Mathf.Abs(m.m11) * e.y + Mathf.Abs(m.m12) * e.z,
+                    Mathf.Abs(m.m20) * e.x + Mathf.Abs(m.m21) * e.y + Mathf.Abs(m.m22) * e.z);
+                var wb = new Bounds(c, ext * 2f);
+                if (i == 0) b = wb; else b.Encapsulate(wb);
+            }
             return b;
         }
 

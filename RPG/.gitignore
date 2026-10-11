@@ -107,3 +107,7 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Local backup of the PolyFew building reductions (raw .mesh + original Meshy textures, ~2 GB)
+/[Aa]ssets/Art/Buildings/SongDynasty/PolyFewBackup/
+/[Aa]ssets/Art/Buildings/SongDynasty/PolyFewBackup.meta
