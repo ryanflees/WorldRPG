@@ -885,6 +885,8 @@ namespace WorldRPG.EditorTools
                 ink.SetFloat("_LineFadeEnd", 632f);
                 ink.SetFloat("_InnerFadeStart", 97f);
                 ink.SetFloat("_InnerFadeEnd", 267f);
+                // Sun-glow corner off: it read as a yellow-grey film over that part of the screen.
+                ink.SetFloat("_SunGlowStrength", 0f);
                 EditorUtility.SetDirty(ink);
             }
 

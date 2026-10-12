@@ -32,7 +32,7 @@ Shader "WorldRPG/InkEdges"
         _SunGlowColor("Sun Glow Color", Color) = (1.0, 0.98, 0.94, 1)
         _SunGlowCenter("Sun Glow Centre (screen uv)", Vector) = (0.95, 1.05, 0, 0)
         _SunGlowRadius("Sun Glow Radius", Range(0.1, 2)) = 0.85
-        _SunGlowStrength("Sun Glow Strength", Range(0, 1)) = 0.32
+        _SunGlowStrength("Sun Glow Strength", Range(0, 1)) = 0
 
         [Header(Paper)]
         _PaperGrain("Paper Grain", Range(0, 0.1)) = 0.025
@@ -130,8 +130,10 @@ Shader "WorldRPG/InkEdges"
 
                 // Misty sunlit corner (aspect-corrected distance from the glow centre).
                 float2 toSun = (uv - _SunGlowCenter.xy) * float2(_ScreenSize.x / _ScreenSize.y, 1);
+                // Screen blend: brightens toward the light without flattening colour into a cream wash
+                // (a plain lerp to the glow colour read as a yellow-grey film over that corner).
                 half glow = pow(saturate(1 - length(toSun) / _SunGlowRadius), 2) * _SunGlowStrength;
-                color = lerp(color, _SunGlowColor.rgb, glow);
+                color = 1 - (1 - color) * (1 - _SunGlowColor.rgb * glow);
 
                 // Screen-locked grain reads as paper fibre rather than film noise.
                 color *= 1 + (Hash(floor(uv * _ScreenSize.xy * 0.5)) - 0.5) * _PaperGrain;

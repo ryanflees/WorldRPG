@@ -38,7 +38,7 @@ Material:
     - _NormalThreshold: 0.45
     - _PaperGrain: 0.025
     - _SunGlowRadius: 0.85
-    - _SunGlowStrength: 0.32
+    - _SunGlowStrength: 0
     m_Colors:
     - _HazeColor: {r: 0.84, g: 0.84, b: 0.82, a: 1}
     - _InkColor: {r: 0.19999996, g: 0.17999998, b: 0.16999996, a: 1}
